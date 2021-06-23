@@ -10,4 +10,5 @@ import java.math.BigInteger;
 public interface PlayerMapper {
     public Player findByWxName(String wx_name);
     public Player findById(int id);
+    public void insertPlayer(Player player);
 }

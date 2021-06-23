@@ -7,4 +7,11 @@
     <select id="findByWxName" resultType="com.bad.bigad.entity.Player">
         SELECT id,wx_name,wx_nick_name from player WHERE wx_name = #{wx_name}
     </select>
+    <insert id="insertPlayer" parameterType="com.bad.bigad.entity.Player" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO player (wx_name, wx_nick_name)
+        VALUES (
+                #{wx_name},
+                #{wx_nick_name}
+               )
+    </insert>
 </mapper>

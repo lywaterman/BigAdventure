@@ -1,5 +1,6 @@
 package com.bad.bigad.controller;
 
+import com.bad.bigad.entity.Player;
 import com.bad.bigad.service.PlayerService;
 import lombok.Data;
 import org.redisson.api.RMap;
@@ -33,9 +34,18 @@ public class LoginController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public Object login(@RequestBody LoginParam param) {
-//        RMap<Object,Object> m = redissonClient.getMap("player:001");
-//        m.put("name", "ly");
-//        m.put("age", 18);
+        //验证参数
+
+        //验证通过
+        RMap<Object,Object> m = redissonClient.getMap(param.getWx_name());
+        if (m.isExists()) {
+            //存在就登陆
+
+        } else {
+            //不存在就创建
+            Player player = playerService.CreateNew(param.getWx_name(), param.getWx_nick_name());
+            return player.getId();
+        }
         return param.getWx_name();
     }
 

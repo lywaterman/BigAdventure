@@ -22,4 +22,13 @@ public class PlayerServiceImp implements PlayerService {
     public Player findByWxName(String wx_name) {
         return playerMapper.findByWxName(wx_name);
     }
+
+    @Override
+    public Player CreateNew(String wx_name, String wx_nick_name) {
+        Player p = new Player();
+        p.setWx_name(wx_name);
+        p.setWx_nick_name(wx_nick_name);
+        playerMapper.insertPlayer(p);
+        return p;
+    }
 }
