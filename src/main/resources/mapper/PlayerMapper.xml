@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myself.mybatis.mapper.TMsgMapper">
+    <select id="findById" resultType="com.bad.bigad.entity.Player">
+        SELECT id,wx_name,wx_nick_name from player WHERE id = #{id}
+    </select>
+    <select id="findByWxName" resultType="com.bad.bigad.entity.Player">
+        SELECT id,wx_name,wx_nick_name from player WHERE wx_name = #{wx_name}
+    </select>
+</mapper>
