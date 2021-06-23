@@ -27,14 +27,7 @@ enum Helper {
     instance;
     static ExecutorService pool = Executors.newCachedThreadPool();
 
-    Helper() {
-
-    }
-}
-
-@SpringBootApplication
-public class BigadApplication {
-    public static void main(String[] args) throws ScriptException, IOException, NoSuchMethodException {
+    public void startJsEngine() throws ScriptException, IOException, NoSuchMethodException {
         String currentPath = new java.io.File(".").getCanonicalPath();
         System.out.println("Current dir:" + currentPath);
 
@@ -55,8 +48,10 @@ public class BigadApplication {
         FilesystemFolder rootFolder = FilesystemFolder.create(file, "UTF-8");
         Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
 
+        File rootFile = ResourceUtils.getFile("classpath:js/test.js");
+
         //scriptEngine.eval(new FileReader("test.js"));
-        final CompiledScript compiled = ((Compilable)scriptEngine).compile(new FileReader("test.js"));
+        final CompiledScript compiled = ((Compilable)scriptEngine).compile(new FileReader(rootFile));
         compiled.eval();
 
 
@@ -80,7 +75,21 @@ public class BigadApplication {
         ScriptObjectMirror m1 = (ScriptObjectMirror) invocable.invokeFunction("getGeziByStr", fff);
         System.out.println(m1.get("news"));
 
+    }
 
+    Helper() {
+
+    }
+}
+
+@SpringBootApplication
+public class BigadApplication {
+    public static void main(String[] args) {
+        try {
+            Helper.instance.startJsEngine();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         SpringApplication.run(BigadApplication.class, args);
     }
