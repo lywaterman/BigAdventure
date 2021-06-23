@@ -1,6 +1,7 @@
 package com.bad.bigad;
 
 import com.coveo.nashorn_modules.FilesystemFolder;
+import com.coveo.nashorn_modules.Folder;
 import com.coveo.nashorn_modules.Require;
 import com.coveo.nashorn_modules.ResourceFolder;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
@@ -9,11 +10,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.ResourceUtils;
 
 import javax.script.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -22,7 +26,7 @@ import java.util.concurrent.Executors;
 enum Helper {
     instance;
     static ExecutorService pool = Executors.newCachedThreadPool();
-    static String script = "getA(a);";
+
     Helper() {
 
     }
@@ -33,8 +37,6 @@ public class BigadApplication {
     public static void main(String[] args) throws ScriptException, IOException, NoSuchMethodException {
         String currentPath = new java.io.File(".").getCanonicalPath();
         System.out.println("Current dir:" + currentPath);
-
-
 
         ScriptEngineManager sm = new ScriptEngineManager();
 
@@ -49,10 +51,9 @@ public class BigadApplication {
         String[] stringArray = new String[]{"-doe", "--global-per-engine"};
         ScriptEngine scriptEngine = factory.getScriptEngine(stringArray);
 
-        FilesystemFolder rootFolder = FilesystemFolder.create(new File(currentPath), "UTF-8");
+        File file = ResourceUtils.getFile("classpath:js");
+        FilesystemFolder rootFolder = FilesystemFolder.create(file, "UTF-8");
         Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
-
-        Require.enable((NashornScriptEngine) scriptEngine, rootFolder);
 
         //scriptEngine.eval(new FileReader("test.js"));
         final CompiledScript compiled = ((Compilable)scriptEngine).compile(new FileReader("test.js"));
