@@ -1,4 +1,4 @@
-package com.bad.bigad.configs;
+package com.bad.bigad.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

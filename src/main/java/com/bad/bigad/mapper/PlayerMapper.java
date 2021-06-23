@@ -1,4 +1,4 @@
-package com.bad.bigad.mappers;
+package com.bad.bigad.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
