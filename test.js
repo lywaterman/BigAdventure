@@ -23,8 +23,8 @@ var gezi01 = {
 }
 
 function getGeziStr() {
-    var cloneGezi = { ...gezi01 }
-    var s = JSONfn.stringify(cloneGezi)
+    //var cloneGezi = { ...gezi01 }
+    var s = JSONfn.stringify(gezi01)
     //var s = JSON.stringify(gezi01, function(key, val) {
     //    if (typeof val === 'function') {
     //        return val + '';
