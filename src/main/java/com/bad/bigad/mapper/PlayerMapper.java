@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.math.BigInteger;
 
+//相当于DAO
 @Mapper
 public interface PlayerMapper {
     public Player findByWxName(String wx_name);
