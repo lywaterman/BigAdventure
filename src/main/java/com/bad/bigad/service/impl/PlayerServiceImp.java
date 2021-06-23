@@ -17,4 +17,9 @@ public class PlayerServiceImp implements PlayerService {
     public Player findById(int id) {
         return playerMapper.findById(id);
     }
+
+    @Override
+    public Player findByWxName(String wx_name) {
+        return playerMapper.findByWxName(wx_name);
+    }
 }

@@ -6,4 +6,5 @@ import java.math.BigInteger;
 
 public interface PlayerService {
     public Player findById(int id);
+    public Player findByWxName(String wx_name);
 }
