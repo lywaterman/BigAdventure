@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("rabbitTopicConsumer")
 public class RabbitTopicConsumer {
+    //单线程处理
     @RabbitListener(queues = RabbitmqConfig.QUEUE_INFORM_COMMAND)
     public void onMessage(Message message, Channel channel) throws Exception {
         log.info(new String(message.getBody(), message.getMessageProperties().getContentEncoding()));
