@@ -1,5 +1,6 @@
 package com.bad.bigad.controller;
 
+import com.bad.bigad.config.RabbitmqConfig;
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.service.PlayerService;
 import io.jsonwebtoken.*;
@@ -9,6 +10,7 @@ import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -54,6 +56,9 @@ public class LoginController {
 
     @Autowired
     PlayerService playerService;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     static <T> Optional<T> or(Optional<T> first, Optional<T> second) {
         return first.isPresent() ? first : second;
@@ -118,6 +123,12 @@ public class LoginController {
     public Object test1(@RequestParam String token) {
         parseToken(token);
         return token;
+    }
+
+    @RequestMapping("/test2")
+    public Object test2() {
+        rabbitTemplate.convertAndSend(RabbitmqConfig.EXCHANGE_TOPICS_INFORM, "inform.command", "hello rabbit");
+        return "OK";
     }
 
     public String createPlayerToken(Player player) {
