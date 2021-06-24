@@ -67,20 +67,23 @@ public class LoginController {
     public LoginResult login(@RequestBody LoginParam param) {
         //验证参数
 
-        Lock lock = redissonClient.getLock(param.getWx_name());
-
-        Boolean canLock = lock.tryLock();
-        if (!canLock) {
-            return null;
-        }
 
         Player player = null;
         //验证通过
-        try {
-            RMap<String, Player> m = redissonClient.getMap("players");
-            player = m.get(param.getWx_name());
 
-            if (player == null) {
+        RMap<String, Player> m = redissonClient.getMap("players");
+        player = m.get(param.getWx_name());
+
+        if (player == null) {
+            //内存没有，加载数据到内存
+            Lock lock = redissonClient.getLock(param.getWx_name());
+
+            Boolean canLock = lock.tryLock();
+            if (!canLock) {
+                return null;
+            }
+            try {
+
                 player = playerService.findByWxName(param.getWx_name());
                 if (player != null) {
                     m.put(player.getWx_name(), player);
@@ -92,10 +95,11 @@ public class LoginController {
                         m.put(player.getWx_name(), player);
                     }
                 }
+            } finally {
+                lock.unlock();
             }
-        } finally {
-            lock.unlock();
         }
+
 
         LoginResult loginResult = new LoginResult();
         loginResult.setUser_nick_name(player.getWx_nick_name());
