@@ -22,11 +22,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
 
 @Data
 class LoginParam {
     private String wx_name;
     private String wx_nick_name;
+}
+
+@Data
+class LoginResult {
+    private String user_nick_name;
+    private String token;
 }
 
 @RestController
@@ -57,21 +64,43 @@ public class LoginController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public Player login(@RequestBody LoginParam param) {
+    public LoginResult login(@RequestBody LoginParam param) {
         //验证参数
 
+        Lock lock = redissonClient.getLock(param.getWx_name());
+
+        Boolean canLock = lock.tryLock();
+        if (!canLock) {
+            return null;
+        }
+
+        Player player = null;
         //验证通过
-        RMap<String,Player> m = redissonClient.getMap("players");
+        try {
+            RMap<String, Player> m = redissonClient.getMap("players");
+            player = m.get(param.getWx_name());
 
-        Player player = m.get(param.getWx_name());
-        if (player == null) {
-            player = playerService.findByWxName(param.getWx_name());
-        }
-        if (player == null) {
-            player = playerService.CreateNew(param.getWx_name(), param.getWx_nick_name());
+            if (player == null) {
+                player = playerService.findByWxName(param.getWx_name());
+                if (player != null) {
+                    m.put(player.getWx_name(), player);
+                }
+
+                if (player == null) {
+                    player = playerService.CreateNew(param.getWx_name(), param.getWx_nick_name());
+                    if (player != null) {
+                        m.put(player.getWx_name(), player);
+                    }
+                }
+            }
+        } finally {
+            lock.unlock();
         }
 
-        return player;
+        LoginResult loginResult = new LoginResult();
+        loginResult.setUser_nick_name(player.getWx_nick_name());
+        loginResult.setToken(createPlayerToken(player));
+        return loginResult;
     }
 
     @RequestMapping("/test")
@@ -85,6 +114,13 @@ public class LoginController {
     public Object test1(@RequestParam String token) {
         parseToken(token);
         return token;
+    }
+
+    public String createPlayerToken(Player player) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("wx_name", player.getWx_name());
+        map.put("wx_nick_name", player.getWx_nick_name());
+        return creatToken(map);
     }
 
     public  String creatToken(Map<String,Object> params) {
