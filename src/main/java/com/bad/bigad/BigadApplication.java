@@ -62,16 +62,18 @@ enum Helper {
         bindings.put("a", 2.0);
 
         Double o = null;
+
+        //从脚本取出对象
         ScriptObjectMirror m = (ScriptObjectMirror) invocable.invokeFunction("getGezi");
         System.out.println(m.get("news"));
-
+        //调用对象方法
         Integer iii = (Integer) m.callMember("check", m);
         System.out.println(iii);
 
+        //从脚本取出对象字符串
         String fff = (String) invocable.invokeFunction("getGeziStr");
         System.out.println(fff);
-
-
+        //用脚本转化字符串为对象
         ScriptObjectMirror m1 = (ScriptObjectMirror) invocable.invokeFunction("getGeziByStr", fff);
         System.out.println(m1.get("news"));
 

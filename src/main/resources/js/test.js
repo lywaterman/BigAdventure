@@ -22,6 +22,19 @@ var gezi01 = {
     }
 }
 
+//对象创造模版
+function getGezi01() {
+    var gezi01 = {
+        type: 2,
+        news: "今天天气不错",
+        check: function(m) {
+            return m.type;
+        }
+    }
+    return gezi01;
+}
+
+
 function getGeziStr() {
     //var cloneGezi = { ...gezi01 }
     var s = JSONfn.stringify(gezi01)
