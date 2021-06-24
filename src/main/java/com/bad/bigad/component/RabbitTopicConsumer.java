@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 public class RabbitTopicConsumer {
     @RabbitListener(queues = RabbitmqConfig.QUEUE_INFORM_COMMAND)
     public void onMessage(Message message, Channel channel) throws Exception {
-        log.info("Message content : " + message);
-
-        log.info("消息已确认");
+        log.info(new String(message.getBody(), message.getMessageProperties().getContentEncoding()));
     }
 }
