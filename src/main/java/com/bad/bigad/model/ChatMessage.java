@@ -4,8 +4,14 @@ import lombok.Data;
 
 @Data
 public class ChatMessage {
-    private String world;
-    private String type;
+    public enum MessageType {
+        CHAT,
+        JOIN,
+        LEAVE
+    }
+    private String to; //接收者
+    private MessageType type;
+    private Boolean toUser;
     private String content;
-    private String sender;
+    private String sender;   //发送者
 }

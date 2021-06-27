@@ -11,19 +11,14 @@ import org.springframework.stereotype.Controller;
 import com.bad.bigad.model.ChatMessage;
 
 @Controller
-public class WebSocketChatController {
+public class ChatController {
     @Autowired
     RabbitTemplate rabbitTemplate;
 
     @MessageMapping("/chat.sendM2M")
     @SendTo("/topic/javainuse")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-        return chatMessage;
-    }
-
-    @MessageMapping("chat.sendM2S")
-    public void sendMessage2S(@Payload ChatMessage chatMessage) {
-
+       return null;
     }
 
     @MessageMapping("/chat.newUser")
