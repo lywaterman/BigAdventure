@@ -3,6 +3,7 @@ package com.bad.bigad.controller;
 import com.bad.bigad.config.RabbitmqConfig;
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.service.PlayerService;
+import com.bad.bigad.util.Util;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.DefaultClaims;
 import lombok.Data;
@@ -121,7 +122,7 @@ public class LoginController {
     }
     @RequestMapping("/test1")
     public Object test1(@RequestParam String token) {
-        parseToken(token);
+        Util.instance.parseToken(token, jwtKey);
         return token;
     }
 
@@ -155,16 +156,5 @@ public class LoginController {
         return builder.compact();
     }
 
-    public Map<String, Object> parseToken(String token) {
-        Claims claims = null;
-        try {
-            claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(jwtKey))
-                    .parseClaimsJws(token).getBody();
-        } catch (SignatureException | MalformedJwtException e) {
-            logger.info("token解析失败");
-        } catch (ExpiredJwtException e) {
-            logger.info("token已过期");
-        }
-        return claims;
-    }
+
 }

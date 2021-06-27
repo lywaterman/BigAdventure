@@ -15,7 +15,11 @@ public class ChatServiceImp implements ChatService {
     @Autowired
     private SimpMessageSendingOperations simpMessageSendingOperations;
 
-    private Gson gson = new Gson();
+    private Gson gson;
+
+    {
+        gson = new Gson();
+    }
 
     @Override
     public boolean sendMsg(String msg) {

@@ -10,8 +10,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws");
-        registry.addEndpoint("/ws")
+        registry.addEndpoint("/chat");
+        registry.addEndpoint("/chat")
                 .setAllowedOrigins("*")
                 .withSockJS()
                 .setHeartbeatTime(60_000);
@@ -33,4 +33,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setSystemHeartbeatSendInterval(5000)
                 .setSystemHeartbeatReceiveInterval(4000);
     }
+
 }
