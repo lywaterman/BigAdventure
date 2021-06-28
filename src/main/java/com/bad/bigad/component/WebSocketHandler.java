@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
+@Component
 public class WebSocketHandler extends TextWebSocketHandler {
     List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 

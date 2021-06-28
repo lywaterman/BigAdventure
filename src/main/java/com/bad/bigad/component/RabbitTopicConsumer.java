@@ -8,7 +8,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-//@Component("rabbitTopicConsumer")
+@Component("rabbitTopicConsumer")
 public class RabbitTopicConsumer {
     //单线程处理
     @RabbitListener(queues = RabbitmqConfig.QUEUE_INFORM_COMMAND)
