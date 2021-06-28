@@ -57,7 +57,7 @@ public class RabbitmqConfig {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory("127.0.0.1", 5672);
         connectionFactory.setUsername("guest");
         connectionFactory.setPassword("guest");
-        connectionFactory.setVirtualHost("bad");
+        //connectionFactory.setVirtualHost("bad");
         connectionFactory.setPublisherConfirmType(CachingConnectionFactory.ConfirmType.CORRELATED);
         connectionFactory.setPublisherReturns(true);
         return connectionFactory;

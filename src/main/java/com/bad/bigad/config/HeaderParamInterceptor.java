@@ -29,10 +29,16 @@ public class HeaderParamInterceptor implements ChannelInterceptor {
                 Object token = ((Map) raw).get("token");
 
                 if (token instanceof LinkedList) {
+                    String jwtToken = ((LinkedList) token).get(0).toString();
                     Map<String, Object> claims = Util.instance.parseToken(
                             ((LinkedList) token).get(0).toString(),
                             jwtKey);
-                    accessor.setUser(new UserPrincipal((String) claims.get("wx_name")));
+                    if (claims != null) {
+                        accessor.setUser(new UserPrincipal((String) claims.get("wx_name")));
+                    } else {
+                        return null;
+                    }
+
                 }
             }
         }

@@ -1,12 +1,16 @@
 package com.bad.bigad.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    @Autowired
+    HeaderParamInterceptor headerParamInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -24,7 +28,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         //使用rabbitmq做代理，所有消息发送给rabbitmq
         registry.enableStompBrokerRelay("/exchange","/topic","/queue","/amq/queue")
-                .setVirtualHost("bad")
+                //.setVirtualHost("bad")
                 .setRelayHost("localhost")
                 .setClientLogin("guest")
                 .setClientPasscode("guest")
@@ -33,5 +37,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setSystemHeartbeatSendInterval(5000)
                 .setSystemHeartbeatReceiveInterval(4000);
     }
-
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(headerParamInterceptor);
+    }
 }

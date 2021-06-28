@@ -1,5 +1,6 @@
 package com.bad.bigad.controller;
 
+import com.bad.bigad.util.Util;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -9,23 +10,23 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 import com.bad.bigad.model.ChatMessage;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.security.Principal;
 
 @Controller
 public class ChatController {
     @Autowired
-    RabbitTemplate rabbitTemplate;
+    private RabbitTemplate rabbitTemplate;
 
-    @MessageMapping("/chat.sendM2M")
-    @SendTo("/topic/javainuse")
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-       return null;
-    }
-
-    @MessageMapping("/chat.newUser")
-    @SendTo("/topic/javainuse")
-    public ChatMessage newUser(@Payload ChatMessage chatMessage,
-                               SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
+    @MessageMapping("/chat.sendMsg")
+    public void sendMsg(@Payload ChatMessage chatMessage, Principal principal) {
+        String name = principal.getName();
+        chatMessage.setSender(name);
+        rabbitTemplate.convertAndSend(
+                "topicWebSocketExchange",
+                "topic.public",
+                Util.gson.toJson(chatMessage));
     }
 }

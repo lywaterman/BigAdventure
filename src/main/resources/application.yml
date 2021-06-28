@@ -13,5 +13,5 @@ mybatis:
   mapper-locations: classpath*:mapper/*Mapper.xml
   type-aliases-package: com.bad.bigad.entity
 jwt_key: rgsnsm#ldyh*ws%l&hdpmnmw@xyhndes
-jwt_minute: 1
+jwt_minute: 360
 jwt_pub: bad
