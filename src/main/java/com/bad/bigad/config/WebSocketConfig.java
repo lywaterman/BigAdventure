@@ -14,32 +14,45 @@ import java.util.Map;
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSocketConfigurer
+{
     @Autowired
     HeaderParamInterceptor headerParamInterceptor;
 
     @Autowired
     TokenCheckInterceptor tokenCheckInterceptor;
 
+    @Autowired
+    MyHandshakeHandler myHandshakeHandler;
+
+    @Autowired
+    WebSocketHandler webSocketHandler;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        //chat相关
         registry.addEndpoint("/chat").addInterceptors(tokenCheckInterceptor)
-                .setHandshakeHandler(
-                        new DefaultHandshakeHandler() {
-                            @Override
-                            protected Principal determineUser(ServerHttpRequest request,
-                                                              WebSocketHandler wsHandler,
-                                                              Map<String, Object> attributes) {
-                                //设置认证用户
-                                return (Principal)attributes.get("user");
-                            }
-                        });
+                .setHandshakeHandler(myHandshakeHandler);
 
         registry.addEndpoint("/chat")
                 .setAllowedOrigins("*")
                 .withSockJS()
                 .setHeartbeatTime(60_000);
     }
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(webSocketHandler, "/game")
+                .addInterceptors(tokenCheckInterceptor)
+                .setHandshakeHandler(myHandshakeHandler);
+
+        registry.addHandler(webSocketHandler, "/game")
+                .setAllowedOrigins("*")
+                .withSockJS()
+                .setHeartbeatTime(60_000);
+    }
+
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {

@@ -26,6 +26,11 @@ public class TokenCheckInterceptor implements HandshakeInterceptor {
         HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
         String token = httpServletRequest.getParameter("token");
 
+        if (token == null) {
+            log.info("token是空的");
+            return false;
+        }
+
         Map<String, Object> claims = Util.instance.parseToken(token, jwtKey);
 
         if(claims == null) {
