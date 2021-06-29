@@ -4,6 +4,8 @@ import com.bad.bigad.entity.Player;
 import com.bad.bigad.mapper.PlayerMapper;
 import com.bad.bigad.service.PlayerService;
 import com.bad.bigad.util.Util;
+import org.redisson.api.RMap;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import java.math.BigInteger;
 public class PlayerServiceImp implements PlayerService {
     @Autowired
     private PlayerMapper playerMapper;
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Override
     public Player findById(long id) {
@@ -32,5 +36,11 @@ public class PlayerServiceImp implements PlayerService {
         p.setWx_nick_name(wx_nick_name);
         playerMapper.insertPlayer(p);
         return p;
+    }
+
+    @Override
+    public Player GetPlayerFromCache(Long id) {
+        RMap<Long, Player> players = redissonClient.getMap("players");
+        return players.get(id);
     }
 }

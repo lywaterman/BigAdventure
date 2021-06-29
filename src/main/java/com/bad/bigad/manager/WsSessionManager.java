@@ -23,6 +23,11 @@ public enum WsSessionManager {
         sessionPool.remove(playerId);
     }
 
+
+    public WebSocketSession get(Long playerId) {
+        return sessionPool.get(playerId);
+    }
+
     public void removeAddClose(Long playerId) {
         WebSocketSession session = sessionPool.remove(playerId);
         if (session != null) {
@@ -34,7 +39,4 @@ public enum WsSessionManager {
         }
     }
 
-    public WebSocketSession get(Long playerId) {
-        return sessionPool.get(playerId);
-    }
 }

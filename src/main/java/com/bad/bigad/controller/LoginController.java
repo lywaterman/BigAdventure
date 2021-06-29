@@ -2,6 +2,7 @@ package com.bad.bigad.controller;
 
 import com.bad.bigad.config.RabbitmqConfig;
 import com.bad.bigad.entity.Player;
+import com.bad.bigad.manager.PlayerManager;
 import com.bad.bigad.service.PlayerService;
 import com.bad.bigad.util.Util;
 import io.jsonwebtoken.*;
@@ -61,6 +62,8 @@ public class LoginController {
     @Autowired
     RabbitTemplate rabbitTemplate;
 
+
+    //分布式登陆接口, 将玩家信息加载进redis
     @RequestMapping("/login")
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -106,6 +109,8 @@ public class LoginController {
             } finally {
                 lock.unlock();
             }
+        } else {
+
         }
 
         LoginResult loginResult = new LoginResult();
