@@ -35,6 +35,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         session.sendMessage(new TextMessage("Hello " + userName));
     }
 
+    //可以处理同步登陆
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         Long id = Long.parseLong((String) session.getAttributes().get("id"));
