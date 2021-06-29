@@ -46,6 +46,7 @@ public class TokenCheckInterceptor implements HandshakeInterceptor {
                 return userName;
             }
         });
+        attributes.put("id", userName);
 
         return true;
     }
