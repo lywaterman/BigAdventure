@@ -42,6 +42,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         if (player == null) {
             session.sendMessage(new TextMessage("请先登陆"));
             session.close();
+            return;
         } else {
             session.sendMessage(new TextMessage("登陆成功"));
         }
