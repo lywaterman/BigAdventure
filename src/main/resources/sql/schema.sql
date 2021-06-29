@@ -1,7 +1,7 @@
 drop table if exists player;
 create table player (
-    id int auto_increment,
-    wx_name varchar(255) unique,
-    wx_nick_name varchar(255),
+    id bigint UNIQUE ,
+    wx_name varchar(255) DEFAULT NULL UNIQUE ,
+    wx_nick_name varchar(255) DEFAULT NULL,
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

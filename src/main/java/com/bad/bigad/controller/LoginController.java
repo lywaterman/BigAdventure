@@ -61,10 +61,6 @@ public class LoginController {
     @Autowired
     RabbitTemplate rabbitTemplate;
 
-    static <T> Optional<T> or(Optional<T> first, Optional<T> second) {
-        return first.isPresent() ? first : second;
-    }
-
     @RequestMapping("/login")
     @PostMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -75,13 +71,18 @@ public class LoginController {
 
 
         Player player = null;
-        //验证通过
+        //微信登陆
+        RMap<String, Long> wxToId = redissonClient.getMap("wxToId");
+        Long id = wxToId.get(param.getWx_name());
 
-        RMap<String, Player> m = redissonClient.getMap("players");
-        player = m.get(param.getWx_name());
+        RMap<Long, Player> players = redissonClient.getMap("players");
+        if (id != null) {
+            player = players.get(id);
+        }
 
-        if (player == null) {
+        if (id == null || player == null) {
             //内存没有，加载数据到内存
+            //应该锁id最好，但是id可能不再redis
             Lock lock = redissonClient.getLock(param.getWx_name());
 
             Boolean canLock = lock.tryLock();
@@ -89,23 +90,23 @@ public class LoginController {
                 return null;
             }
             try {
-
                 player = playerService.findByWxName(param.getWx_name());
                 if (player != null) {
-                    m.put(player.getWx_name(), player);
+                    players.put(player.getId(), player);
+                    wxToId.put(player.getWx_name(), player.getId());
                 }
 
                 if (player == null) {
                     player = playerService.CreateNew(param.getWx_name(), param.getWx_nick_name());
                     if (player != null) {
-                        m.put(player.getWx_name(), player);
+                        players.put(player.getId(), player);
+                        wxToId.put(player.getWx_name(), player.getId());
                     }
                 }
             } finally {
                 lock.unlock();
             }
         }
-
 
         LoginResult loginResult = new LoginResult();
         loginResult.setUser_nick_name(player.getWx_nick_name());
@@ -134,8 +135,7 @@ public class LoginController {
 
     public String createPlayerToken(Player player) {
         Map<String,Object> map = new HashMap<>();
-        map.put("wx_name", player.getWx_name());
-        map.put("wx_nick_name", player.getWx_nick_name());
+        map.put("id", player.getIdStr());
         return creatToken(map);
     }
 

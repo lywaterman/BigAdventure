@@ -9,9 +9,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum WsSessionManager {
     instance;
 
-    private ConcurrentHashMap<String, WebSocketSession> sessionPool;
+    private ConcurrentHashMap<Long, WebSocketSession> sessionPool;
     {
         sessionPool = new ConcurrentHashMap<>();
     }
 
+    public void addSession(Long playerId, WebSocketSession session) {
+
+    }
 }

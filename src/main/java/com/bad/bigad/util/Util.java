@@ -17,6 +17,15 @@ public enum Util {
         gson = new Gson();
     }
 
+    private SnowFlake snowFlake;
+    {
+        snowFlake = new SnowFlake(0, 1);
+    }
+
+    public long getSnowId() {
+        return snowFlake.nextId();
+    }
+
     public Map<String, Object> parseToken(String token, String key) {
         Claims claims = null;
         try {

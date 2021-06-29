@@ -3,6 +3,7 @@ package com.bad.bigad.service.impl;
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.mapper.PlayerMapper;
 import com.bad.bigad.service.PlayerService;
+import com.bad.bigad.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class PlayerServiceImp implements PlayerService {
     private PlayerMapper playerMapper;
 
     @Override
-    public Player findById(int id) {
+    public Player findById(long id) {
         return playerMapper.findById(id);
     }
 
@@ -26,6 +27,7 @@ public class PlayerServiceImp implements PlayerService {
     @Override
     public Player CreateNew(String wx_name, String wx_nick_name) {
         Player p = new Player();
+        p.setId(Util.instance.getSnowId());
         p.setWx_name(wx_name);
         p.setWx_nick_name(wx_nick_name);
         playerMapper.insertPlayer(p);
