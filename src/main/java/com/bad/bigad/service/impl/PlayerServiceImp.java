@@ -9,14 +9,15 @@ import com.bad.bigad.util.Util;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 
 @Service
 public class PlayerServiceImp implements PlayerService {
-    @NacosInjected
-    private NamingService namingService;
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
     @Autowired
     private PlayerMapper playerMapper;
@@ -49,4 +50,8 @@ public class PlayerServiceImp implements PlayerService {
         return players.get(id);
     }
 
+    @Override
+    public  boolean KickoutPlayer(Long id) {
+        return false;
+    }
 }

@@ -1,4 +1,5 @@
 spring:
+  application.name: bad-starter
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/bad?characterEncoding=utf-8&useSSL=false
     username: root
@@ -17,6 +18,11 @@ nacos:
     server-addr: 127.0.0.1:8848
   discovery:
     server-addr: 127.0.0.1:8848
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: *
 
 jwt_key: rgsnsm#ldyh*ws%l&hdpmnmw@xyhndes
 jwt_minute: 360
