@@ -10,7 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.ResourceUtils;
 
 import javax.script.*;
@@ -84,7 +86,9 @@ enum Helper {
     }
 }
 
+@EnableScheduling
 @SpringBootApplication
+@EnableDiscoveryClient
 public class BigadApplication {
     public static void main(String[] args) {
         try {

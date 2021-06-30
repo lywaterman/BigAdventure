@@ -72,6 +72,7 @@ public class LoginController {
     public LoginResult login(@RequestBody LoginParam param) {
         //验证参数
 
+        //去微信验证，防止作假
 
         Player player = null;
         //微信登陆

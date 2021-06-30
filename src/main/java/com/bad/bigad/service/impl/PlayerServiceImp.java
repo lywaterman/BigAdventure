@@ -1,5 +1,7 @@
 package com.bad.bigad.service.impl;
 
+import com.alibaba.nacos.api.annotation.NacosInjected;
+import com.alibaba.nacos.api.naming.NamingService;
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.mapper.PlayerMapper;
 import com.bad.bigad.service.PlayerService;
@@ -13,6 +15,9 @@ import java.math.BigInteger;
 
 @Service
 public class PlayerServiceImp implements PlayerService {
+    @NacosInjected
+    private NamingService namingService;
+
     @Autowired
     private PlayerMapper playerMapper;
     @Autowired
@@ -43,4 +48,5 @@ public class PlayerServiceImp implements PlayerService {
         RMap<Long, Player> players = redissonClient.getMap("players");
         return players.get(id);
     }
+
 }

@@ -39,7 +39,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         Long id = Long.parseLong((String) session.getAttributes().get("id"));
+        //检查是否在线
+
         Player player = playerService.GetPlayerFromCache(id);
+
+
         if (player == null) {
             session.sendMessage(new TextMessage("请先登陆"));
             session.close();
