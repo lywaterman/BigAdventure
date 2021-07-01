@@ -94,6 +94,7 @@ public class LoginController {
                 return null;
             }
             try {
+                //可以选择异步队列消峰
                 player = playerService.findByWxName(param.getWx_name());
                 if (player != null) {
                     players.put(player.getId(), player);

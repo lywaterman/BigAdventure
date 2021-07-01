@@ -72,42 +72,46 @@ public class WebSocketHandler extends TextWebSocketHandler {
             session.sendMessage(new TextMessage("登陆成功"));
         }
 
+        RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
         RLock lock = redissonClient.getLock(strId);
 
         if (lock.tryLock()) {
-            lock.lock();
+            try {
+
+                PlayerOnlineStatus playerOnlineStatus = map.get(id);
+
+                boolean online = (playerOnlineStatus != null) && (playerOnlineStatus.getServerId() != -1);
+
+                if (online) {
+                    //说明玩家在线
+                    log.info("玩家在线，kick他"+player.toString());
+
+                    restTemplate.getForObject(
+                            "http://"+serverList.get(serverId)+"/kickPlayer?id={id}",
+                            Boolean.class,
+                            id);
+                }
+
+                //the messages will be broadcasted to all users.
+                WsSessionManager.instance.add(
+                        id,
+                        session);
+                PlayerOnlineStatus status = new PlayerOnlineStatus();
+                status.setServerId(serverId);
+                PlayerManager.instance.add(
+                        id,
+                        player,
+                        status);
+
+            } catch (Exception e) {
+
+            } finally {
+                lock.unlock();
+            }
         } else {
             playerService.kickPlayer(id, "同一账号同时登陆太多，请稍后再试");
+            session.close();
         }
-
-        RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
-        PlayerOnlineStatus playerOnlineStatus = map.get(id);
-
-        boolean online = (playerOnlineStatus != null) && (playerOnlineStatus.getServerId() != -1);
-
-        if (online) {
-            //说明玩家在线
-            log.info("玩家在线，kick他"+player.toString());
-
-            String str = "http://"+serverList.get(serverId)+"/kickPlayer";
-
-            log.info(str);
-            restTemplate.getForObject(
-                    "http://"+serverList.get(serverId)+"/kickPlayer?id={id}",
-                    Boolean.class,
-                    id);
-        }
-
-        //the messages will be broadcasted to all users.
-        WsSessionManager.instance.add(
-                id,
-                session);
-        PlayerOnlineStatus status = new PlayerOnlineStatus();
-        status.setServerId(serverId);
-        PlayerManager.instance.add(
-                id,
-                player,
-                status);
     }
 
     @Override
