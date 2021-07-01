@@ -97,6 +97,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                         id,
                         session);
                 PlayerOnlineStatus status = new PlayerOnlineStatus();
+                //上线后实时更新一下状态
                 status.setServerId(serverId);
                 PlayerManager.instance.add(
                         id,

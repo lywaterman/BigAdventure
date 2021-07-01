@@ -1,8 +1,10 @@
 package com.bad.bigad.config;
 
 import com.bad.bigad.util.Util;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -20,6 +22,7 @@ public class TokenCheckInterceptor implements HandshakeInterceptor {
     @Value("${jwt_key}")
     String jwtKey;
 
+    @SneakyThrows
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes)  {
         ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;

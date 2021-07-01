@@ -19,6 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.DatatypeConverter;
 import java.math.BigInteger;
 import java.security.Key;
@@ -30,8 +33,15 @@ import java.util.concurrent.locks.Lock;
 
 @Data
 class LoginParam {
+    @NotBlank(message="wx_name cannot be missing or empty")
     private String wx_name;
     private String wx_nick_name;
+}
+
+@Data
+class LoginParamToken {
+    @NotBlank(message="token cannot be missing or empty")
+    private String token;
 }
 
 @Data
@@ -62,6 +72,56 @@ public class LoginController {
     @Autowired
     RabbitTemplate rabbitTemplate;
 
+    @RequestMapping("/loginWithToken")
+    @PostMapping(
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public LoginResult loginWithToken(@Valid @RequestBody LoginParamToken param) {
+        Map<String, Object> claims = Util.instance.parseToken(param.getToken(), jwtKey);
+
+        if(claims == null) {
+            //token失效或错误，走登陆流程
+            return null;
+        }
+
+        String idStr = (String) claims.get("id");
+        Long id = Long.parseLong(idStr);
+
+        RMap<Long, Player> players = redissonClient.getMap("players");
+        Player player = players.get(id);
+
+        if (player == null) {
+            //内存没有，加载数据到内存
+            //应该锁id最好，但是id可能不再redis
+            Lock lock = redissonClient.getLock(idStr);
+
+            Boolean canLock = lock.tryLock();
+            if (!canLock) {
+                return null;
+            }
+            try {
+                //可以选择异步队列消峰
+                player = playerService.findById(id);
+                if (player != null) {
+                    players.put(player.getId(), player);
+                }
+
+                if (player == null) {
+                    //没有这个玩家，需要走登陆流程
+                }
+            } finally {
+                lock.unlock();
+            }
+        } else {
+
+        }
+
+        LoginResult loginResult = new LoginResult();
+        loginResult.setUser_nick_name(player.getWx_nick_name());
+
+        return loginResult;
+    }
 
     //分布式登陆接口, 将玩家信息加载进redis
     @RequestMapping("/login")
@@ -69,7 +129,7 @@ public class LoginController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public LoginResult login(@RequestBody LoginParam param) {
+    public LoginResult login(@Valid @RequestBody LoginParam param) {
         //验证参数
 
         //去微信验证，防止作假

@@ -36,7 +36,7 @@ public class ChatServiceImp implements ChatService {
                         "/topic/msg",
                         msg);
             } else {
-                simpMessageSendingOperations.convertAndSend("/topic/public", msg);
+                simpMessageSendingOperations.convertAndSend("/topic/" + msg.getTo(), msg);
             }
         } catch (Exception e) {
             return false;

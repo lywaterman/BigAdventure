@@ -2,7 +2,7 @@ Object.assign(global, { WebSocket: require('websocket').w3cwebsocket });
 StompJs = require('@stomp/stompjs');
 const client = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/chat?token='+
-    'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYWQiLCJpZCI6IjYwNzIzNDIzMDQ1OTU2ODEyOCIsImV4cCI6MTYyNDk2NjcwMywiaWF0IjoxNjI0OTQ1MTAzfQ.7W7yiLIvTA3_MaD1JNRmgU-DoAxCgkUmgiz3PveDsjU',
+    'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYWQiLCJpZCI6IjYwNzIzNDIzMDQ1OTU2ODEyOCIsImV4cCI6MTYyNTE0MzY2NiwiaWF0IjoxNjI1MTIyMDY2fQ.fbmIHOgsKgq_gs77mFJZSWCH0OM9rN54VtXfUzngQuM',
     connectHeaders: {
         //token: 'eyJhbGciOiJIUzI1NiJ9.eyJ3eF9uYW1lIjoibHkxMTEyMjIxMSIsInd4X25pY2tfbmFtZSI6Iua0i-a0izIyMjIiLCJpc3MiOiJiYWQiLCJleHAiOjE2MjQ4Nzc5MzAsImlhdCI6MTYyNDg1NjMzMH0.TC2rgbT9aJwjb-6FjHs7_eOtUFnQofUKPMPzhaE3QF4'
     },
@@ -25,38 +25,40 @@ private_callback = function (message) {
 }
 
 client.onConnect = function (frame) {
-    client.subscribe('/topic/public', public_callback)
+    client.subscribe('/topic/movie', public_callback)
     client.subscribe('/user/topic/msg', private_callback)
     // Do something, all subscribes must be done is this callback
     // This is needed because this will be executed after a (re)connect
 
-    // var chatMessage = {
-    //     content: 'hello，大家好',
-    //     type: 'CHAT',
-    //     to: 'all',
-    //     toUser:false
-    // }
-    //
-    // client.publish({
-    //     destination: "/app/chat.sendMsg",
-    //     body: JSON.stringify(chatMessage)
-    // })
-
-    var pchatMessage = {
-        content: 'hello,帅锅好',
+    var chatMessage = {
+        content: 'hello，大家好',
         type: 'CHAT',
-        to: '607234230459568128',
-        toUser:true
+        to: 'movie',
+        toUser:false
     }
 
     setInterval(function () {
         client.publish({
             destination: "/app/chat.sendMsg",
-            body: JSON.stringify(pchatMessage)
+            body: JSON.stringify(chatMessage)
         })
-        },
-        1000
-    )
+    }, 1000)
+
+    // var pchatMessage = {
+    //     content: 'hello,帅锅好',
+    //     type: 'CHAT',
+    //     to: '607234230459568128',
+    //     toUser:true
+    // }
+    //
+    // setInterval(function () {
+    //     client.publish({
+    //         destination: "/app/chat.sendMsg",
+    //         body: JSON.stringify(pchatMessage)
+    //     })
+    //     },
+    //     1000
+    // )
 
 
     //client.publish("/app/chat.sendMsg", {priority: 9}, JSON.stringify(pchatMessage));

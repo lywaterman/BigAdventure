@@ -42,6 +42,7 @@ public class RabbitmqConfig {
         return new Queue(msgTopicQueue, true);
     }
 
+    //使用FanoutExchange来实现分布式聊天
     @Bean
     public TopicExchange exchange() {
         return new TopicExchange("topicWebSocketExchange", true, false);
