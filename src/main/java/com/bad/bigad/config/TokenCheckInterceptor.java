@@ -46,6 +46,8 @@ public class TokenCheckInterceptor implements HandshakeInterceptor {
                 return userName;
             }
         });
+
+        //id写入session使用
         attributes.put("id", userName);
 
         return true;
