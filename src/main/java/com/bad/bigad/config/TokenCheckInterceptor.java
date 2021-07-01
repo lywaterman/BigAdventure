@@ -21,7 +21,7 @@ public class TokenCheckInterceptor implements HandshakeInterceptor {
     String jwtKey;
 
     @Override
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes)  {
         ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
         HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
         String token = httpServletRequest.getParameter("token");
@@ -40,12 +40,7 @@ public class TokenCheckInterceptor implements HandshakeInterceptor {
         log.info("websocket链接认证成功");
         String userName = (String) claims.get("id");
         //保存认证用户
-        attributes.put("user", new Principal() {
-            @Override
-            public String getName() {
-                return userName;
-            }
-        });
+        attributes.put("user", (Principal) () -> userName);
 
         //id写入session使用
         attributes.put("id", userName);
