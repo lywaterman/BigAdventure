@@ -7,6 +7,7 @@ import com.bad.bigad.model.PlayerOnlineStatus;
 import com.bad.bigad.service.PlayerService;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +58,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
     //可以处理同步登陆
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        Long id = Long.parseLong((String) session.getAttributes().get("id"));
+        String strId = (String) session.getAttributes().get("id");
+        Long id = Long.parseLong(strId);
         //检查是否在线
 
         Player player = playerService.GetPlayerFromCache(id);
-
 
         if (player == null) {
             session.sendMessage(new TextMessage("请先登陆"));
@@ -71,9 +72,20 @@ public class WebSocketHandler extends TextWebSocketHandler {
             session.sendMessage(new TextMessage("登陆成功"));
         }
 
+        RLock lock = redissonClient.getLock(strId);
+
+        if (lock.tryLock()) {
+            lock.lock();
+        } else {
+            playerService.kickPlayer(id, "同一账号同时登陆太多，请稍后再试");
+        }
+
         RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
         PlayerOnlineStatus playerOnlineStatus = map.get(id);
-        if (playerOnlineStatus != null && playerOnlineStatus.getServerId() != -1) {
+
+        boolean online = (playerOnlineStatus != null) && (playerOnlineStatus.getServerId() != -1);
+
+        if (online) {
             //说明玩家在线
             log.info("玩家在线，kick他"+player.toString());
 

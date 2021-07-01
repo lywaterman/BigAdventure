@@ -13,6 +13,6 @@ public class PlayerController {
 
     @RequestMapping("/kickPlayer")
     public boolean kickPlayer(@RequestParam Long id) {
-        return playerService.kickPlayer(id);
+        return playerService.kickPlayer(id, "您在其他地方登陆了");
     }
 }

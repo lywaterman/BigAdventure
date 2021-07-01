@@ -53,8 +53,8 @@ public class PlayerServiceImp implements PlayerService {
     }
 
     @Override
-    public  boolean kickPlayer(Long id) {
-        WsSessionManager.instance.sendMessage(id, "你在其他地方登陆了");
+    public  boolean kickPlayer(Long id, String message) {
+        WsSessionManager.instance.sendMessage(id, message);
 
         WsSessionManager.instance.removeAddClose(id);
         PlayerManager.instance.remove(id);
