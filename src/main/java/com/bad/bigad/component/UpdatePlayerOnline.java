@@ -34,7 +34,7 @@ public class UpdatePlayerOnline {
         map.putAll(PlayerManager.instance.getStatusMap(), 10, TimeUnit.SECONDS);
         log.info("test update");
 
-        log.info(discoveryClient.getInstances("bad-starter").get(0).getUri().toString());
+        //log.info(discoveryClient.getInstances("bad-starter").get(0).getUri().toString());
     }
 
 }

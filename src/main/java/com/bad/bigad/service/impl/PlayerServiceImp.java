@@ -3,6 +3,8 @@ package com.bad.bigad.service.impl;
 import com.alibaba.nacos.api.annotation.NacosInjected;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.bad.bigad.entity.Player;
+import com.bad.bigad.manager.PlayerManager;
+import com.bad.bigad.manager.WsSessionManager;
 import com.bad.bigad.mapper.PlayerMapper;
 import com.bad.bigad.service.PlayerService;
 import com.bad.bigad.util.Util;
@@ -51,7 +53,12 @@ public class PlayerServiceImp implements PlayerService {
     }
 
     @Override
-    public  boolean KickoutPlayer(Long id) {
-        return false;
+    public  boolean kickPlayer(Long id) {
+        WsSessionManager.instance.sendMessage(id, "你在其他地方登陆了");
+
+        WsSessionManager.instance.removeAddClose(id);
+        PlayerManager.instance.remove(id);
+
+        return true;
     }
 }

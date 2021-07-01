@@ -10,22 +10,21 @@ spring:
     port: 5672
     username: guest
     password: guest
+
 mybatis:
   mapper-locations: classpath*:mapper/*Mapper.xml
   type-aliases-package: com.bad.bigad.entity
+
 nacos:
   config:
     server-addr: 127.0.0.1:8848
   discovery:
     server-addr: 127.0.0.1:8848
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: *
 
 jwt_key: rgsnsm#ldyh*ws%l&hdpmnmw@xyhndes
 jwt_minute: 360
 jwt_pub: bad
 
 bad_sid: 1
+
+bad_slist: '{1: "127.0.0.1:8080"}'

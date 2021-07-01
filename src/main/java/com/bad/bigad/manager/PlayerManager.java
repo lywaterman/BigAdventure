@@ -23,12 +23,14 @@ public enum PlayerManager {
         return status_map;
     }
 
-    public void add(Long playerId, Player player) {
+    public void add(Long playerId, Player player, PlayerOnlineStatus status) {
         players.put(playerId, player);
+        status_map.put(playerId, status);
     }
 
     public void remove(Long playerId) {
         players.remove(playerId);
+        status_map.remove(playerId);
     }
 
     public Player get(Long playerId) {

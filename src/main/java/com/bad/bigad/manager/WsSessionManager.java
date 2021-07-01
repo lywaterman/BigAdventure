@@ -1,6 +1,7 @@
 package com.bad.bigad.manager;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -37,6 +38,19 @@ public enum WsSessionManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean sendMessage(Long playerId, String message) {
+        WebSocketSession webSocketSession = sessionPool.get(playerId);
+        if (webSocketSession != null) {
+            try {
+                webSocketSession.sendMessage(new TextMessage(message));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
     }
 
 }
