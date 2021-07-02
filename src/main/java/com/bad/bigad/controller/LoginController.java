@@ -46,6 +46,8 @@ class LoginParamToken {
 
 @Data
 class LoginResult {
+    private int result;
+    private String desc;
     private String user_nick_name;
     private String token;
 }
@@ -82,7 +84,10 @@ public class LoginController {
 
         if(claims == null) {
             //token失效或错误，走登陆流程
-            return null;
+            LoginResult loginResult = new LoginResult();
+            loginResult.setResult(1);
+            loginResult.setDesc("token已失效");
+            return loginResult;
         }
 
         String idStr = (String) claims.get("id");

@@ -1,5 +1,6 @@
 package com.bad.bigad.component;
 
+import com.bad.bigad.config.ServerListConfig;
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.manager.PlayerManager;
 import com.bad.bigad.manager.WsSessionManager;
@@ -12,6 +13,7 @@ import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -28,6 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 @Component
+//@RefreshScope
 public class WebSocketHandler extends TextWebSocketHandler {
     @Autowired
     PlayerService playerService;
@@ -41,8 +44,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Value("${bad_sid}")
     int serverId;
 
-    @Value("#{${bad_slist}}")
-    Map<Integer, String> serverList;
+    @Autowired
+    ServerListConfig serverList;
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
@@ -86,19 +89,24 @@ public class WebSocketHandler extends TextWebSocketHandler {
                     //说明玩家在线
                     log.info("玩家在线，kick他"+player.toString());
 
-                    restTemplate.getForObject(
-                            "http://"+serverList.get(serverId)+"/kickPlayer?id={id}",
-                            Boolean.class,
-                            id);
+                    //优化
+                    //先在本服务器找
+                    playerService.kickPlayer(id, "您在其他地方登陆了");
+
+                    //如果不再本服务器，rpc 调用
+                    if (playerOnlineStatus.getServerId() != serverId) {
+                        restTemplate.getForObject(
+                                "http://" + serverList.getMap().get(playerOnlineStatus.getServerId()) + "/kickPlayer?id={id}",
+                                Boolean.class,
+                                id);
+                    }
                 }
 
-                //the messages will be broadcasted to all users.
+                //在本服务器上线
                 WsSessionManager.instance.add(
                         id,
                         session);
-                PlayerOnlineStatus status = new PlayerOnlineStatus();
-                //上线后实时更新一下状态
-                status.setServerId(serverId);
+                PlayerOnlineStatus status = new PlayerOnlineStatus(serverId);
                 PlayerManager.instance.add(
                         id,
                         player,
@@ -110,7 +118,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 lock.unlock();
             }
         } else {
-            playerService.kickPlayer(id, "同一账号同时登陆太多，请稍后再试");
+            session.sendMessage(new TextMessage("同一账号同时登陆太多，请稍后再试"));
             session.close();
         }
     }
@@ -127,8 +135,4 @@ public class WebSocketHandler extends TextWebSocketHandler {
         );
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }

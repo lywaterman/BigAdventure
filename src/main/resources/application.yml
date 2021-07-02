@@ -27,4 +27,6 @@ jwt_pub: bad
 
 bad_sid: 1
 
-bad_slist: '{1: "127.0.0.1:8080"}'
+servers:
+  map:
+    1: "127.0.0.1:8080"

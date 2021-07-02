@@ -28,13 +28,11 @@ public class UpdatePlayerOnline {
     @Autowired
     DiscoveryClient discoveryClient;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 10000)
     public void updatePlayerOnlineInfo() {
         RMapCache<Long, Object> map = redissonClient.getMapCache("online_status");
-        map.putAll(PlayerManager.instance.getStatusMap(), 10, TimeUnit.SECONDS);
-        log.info("test update");
-
-        //log.info(discoveryClient.getInstances("bad-starter").get(0).getUri().toString());
+        map.putAll(PlayerManager.instance.getStatusMap(), 30, TimeUnit.SECONDS);
+        log.info("更新在线玩家状态");
     }
 
 }
