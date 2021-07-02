@@ -1,7 +1,5 @@
 package com.bad.bigad.service.impl;
 
-import com.alibaba.nacos.api.annotation.NacosInjected;
-import com.alibaba.nacos.api.naming.NamingService;
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.manager.PlayerManager;
 import com.bad.bigad.manager.WsSessionManager;

@@ -1,12 +1,11 @@
 package com.bad.bigad.component;
 
-import com.bad.bigad.config.ServerListConfig;
+import com.bad.bigad.config.ClusterConfig;
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.manager.PlayerManager;
 import com.bad.bigad.manager.WsSessionManager;
 import com.bad.bigad.model.PlayerOnlineStatus;
 import com.bad.bigad.service.PlayerService;
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
@@ -14,7 +13,6 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.CloseStatus;
@@ -23,14 +21,10 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 @Component
-//@RefreshScope
+@RefreshScope
 public class WebSocketHandler extends TextWebSocketHandler {
     @Autowired
     PlayerService playerService;
@@ -45,7 +39,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     int serverId;
 
     @Autowired
-    ServerListConfig serverList;
+    ClusterConfig clusterConfig;
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
@@ -96,7 +90,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                     //如果不再本服务器，rpc 调用
                     if (playerOnlineStatus.getServerId() != serverId) {
                         restTemplate.getForObject(
-                                "http://" + serverList.getMap().get(playerOnlineStatus.getServerId()) + "/kickPlayer?id={id}",
+                                "http://" + clusterConfig.getNodeAddr(playerOnlineStatus.getServerId()) + "/kickPlayer?id={id}",
                                 Boolean.class,
                                 id);
                     }
