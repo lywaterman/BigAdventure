@@ -59,3 +59,11 @@ function getGezi() {
 function checkResult(result) {
 
 }
+
+function onMessage(player, message) {
+
+}
+
+function testReload(log) {
+    log.info("ssssssss333");
+}

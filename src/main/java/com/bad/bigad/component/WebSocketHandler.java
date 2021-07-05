@@ -3,6 +3,7 @@ package com.bad.bigad.component;
 import com.bad.bigad.config.ClusterConfig;
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.manager.PlayerManager;
+import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.WsSessionManager;
 import com.bad.bigad.model.PlayerOnlineStatus;
 import com.bad.bigad.service.PlayerService;
@@ -12,6 +13,7 @@ import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.CloseStatus;
@@ -40,6 +42,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Autowired
     ClusterConfig clusterConfig;
 
+    @Autowired
+    ScriptManager scriptManager;
+
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
@@ -49,6 +54,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
 //        }
         String userName = (String) session.getAttributes().get("id");
         session.sendMessage(new TextMessage("Hello " + userName));
+    }
+
+    @Scheduled(fixedRate = 1000)
+    public void testReload() {
+        scriptManager.reload();
+
+        scriptManager.callJs("testReload", log);
     }
 
     //可以处理同步登陆
