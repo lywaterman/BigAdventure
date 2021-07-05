@@ -82,9 +82,10 @@ public class LoginController {
     public LoginResult loginWithToken(@Valid @RequestBody LoginParamToken param) {
         Map<String, Object> claims = Util.instance.parseToken(param.getToken(), jwtKey);
 
+        LoginResult loginResult = new LoginResult();
+
         if(claims == null) {
             //token失效或错误，走登陆流程
-            LoginResult loginResult = new LoginResult();
             loginResult.setResult(1);
             loginResult.setDesc("token已失效");
             return loginResult;
@@ -114,6 +115,8 @@ public class LoginController {
 
                 if (player == null) {
                     //没有这个玩家，需要走登陆流程
+                    loginResult.setResult(2);
+                    loginResult.setDesc("没有这个玩家");
                 }
             } finally {
                 lock.unlock();
@@ -122,7 +125,6 @@ public class LoginController {
 
         }
 
-        LoginResult loginResult = new LoginResult();
         loginResult.setUser_nick_name(player.getWx_nick_name());
 
         return loginResult;
