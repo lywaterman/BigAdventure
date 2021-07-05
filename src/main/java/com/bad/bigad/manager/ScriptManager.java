@@ -24,6 +24,7 @@ import java.nio.file.Path;
 public class ScriptManager {
     private File rootFile;
     public ScriptEngine scriptEngine;
+    FilesystemFolder rootFolder;
 
     NashornScriptEngineFactory factory;
 
@@ -40,6 +41,7 @@ public class ScriptManager {
 
     public boolean reload() {
         try {
+            Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
             scriptEngine.eval(Files.newBufferedReader(rootFile.toPath()));
         } catch (ScriptException e) {
             e.printStackTrace();
@@ -53,7 +55,7 @@ public class ScriptManager {
     }
 
     @SneakyThrows
-    public ScriptManager() {
+    public boolean initEngine() {
         Path path = FileSystems.getDefault().getPath("").toAbsolutePath();
 
         log.info(path.toString());
@@ -73,7 +75,7 @@ public class ScriptManager {
         //找到js资源文件里的js目录
         //File file = ResourceUtils.getFile("classpath:js");
         File file = ResourceUtils.getFile(path+"/js");
-        FilesystemFolder rootFolder = FilesystemFolder.create(file, "UTF-8");
+        rootFolder = FilesystemFolder.create(file, "UTF-8");
 
         //赋予common.js的require能力
         Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
@@ -86,7 +88,18 @@ public class ScriptManager {
 //        compiled.eval();
         scriptEngine.eval(Files.newBufferedReader(rootFile.toPath()));
 
+        return true;
+    }
 
+    @SneakyThrows
+    public ScriptManager() {
+        initEngine();
+
+        testEngine();
+    }
+
+    @SneakyThrows
+    private void testEngine() {
         //测试相关
         final Invocable invocable = (Invocable) scriptEngine;
 

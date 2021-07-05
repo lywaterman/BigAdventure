@@ -1,4 +1,7 @@
 var JSONfn = require('./jsonfn.js');
+var test = require('./test.js')
+
+
 //function getA(a) {return a};
 var getA = function (a) {return a};
 var getB = function() {return 1.0};
@@ -65,5 +68,5 @@ function onMessage(player, message) {
 }
 
 function testReload(log) {
-    log.info("ssssssss333");
+    test.test(log)
 }
