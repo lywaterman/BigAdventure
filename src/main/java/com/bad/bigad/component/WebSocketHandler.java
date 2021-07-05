@@ -12,7 +12,6 @@ import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.CloseStatus;
@@ -24,8 +23,11 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-@RefreshScope
 public class WebSocketHandler extends TextWebSocketHandler {
+
+    @Value("${bad_sid}")
+    int serverId;
+
     @Autowired
     PlayerService playerService;
 
@@ -34,9 +36,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Autowired
     RestTemplate restTemplate;
-
-    @Value("${bad_sid}")
-    int serverId;
 
     @Autowired
     ClusterConfig clusterConfig;
@@ -81,7 +80,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
                 if (online) {
                     //说明玩家在线
-                    log.info("玩家在线，kick他"+player.toString());
+                    log.info("玩家在线，kick他"+player);
 
                     //优化
                     //先在本服务器找
@@ -90,7 +89,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
                     //如果不再本服务器，rpc 调用
                     if (playerOnlineStatus.getServerId() != serverId) {
                         restTemplate.getForObject(
-                                "http://" + clusterConfig.getNodeAddr(playerOnlineStatus.getServerId()) + "/kickPlayer?id={id}",
+                                new StringBuilder()
+                                        .append("http://")
+                                        .append(clusterConfig.getNodeAddr(playerOnlineStatus.getServerId()))
+                                        .append("/kickPlayer?id={id}").toString(),
                                 Boolean.class,
                                 id);
                     }
@@ -107,7 +109,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                         status);
 
             } catch (Exception e) {
-
+                log.error(String.valueOf(e.getStackTrace()));
             } finally {
                 lock.unlock();
             }

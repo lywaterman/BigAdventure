@@ -10,6 +10,9 @@ import org.springframework.context.event.EventListener;
 
 import java.util.Map;
 
+/*
+    全局动态配置类, 会动态修改的信息在这里配置
+ */
 @Configuration
 @Slf4j
 @RefreshScope
@@ -21,9 +24,6 @@ public class ClusterConfig {
 
     @EventListener(RefreshScopeRefreshedEvent.class)
     public void onRefresh(RefreshScopeRefreshedEvent event) {
-        log.info("servers refresh");
-        log.info(serverList);
-
         serverNodes =  Util.gson.fromJson(serverList, Map.class);
     }
 
