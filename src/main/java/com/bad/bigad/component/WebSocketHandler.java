@@ -7,6 +7,7 @@ import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.WsSessionManager;
 import com.bad.bigad.model.PlayerOnlineStatus;
 import com.bad.bigad.service.PlayerService;
+import com.bad.bigad.util.BridgeForJs;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
@@ -52,15 +53,15 @@ public class WebSocketHandler extends TextWebSocketHandler {
 //            Map value = new Gson().fromJson(message.getPayload(), Map.class);
 //            webSocketSession.sendMessage(new TextMessage("Hello " + value.get("name") + " !"));
 //        }
-        String userName = (String) session.getAttributes().get("id");
-        session.sendMessage(new TextMessage("Hello " + userName));
+//        String userName = (String) session.getAttributes().get("id");
+//        session.sendMessage(new TextMessage("Hello " + userName));
+
+        scriptManager.callJs("onMessage", message.getPayload(), session, BridgeForJs.instance);
     }
 
     @Scheduled(fixedRate = 1000)
     public void testReload() {
         scriptManager.reload();
-
-        scriptManager.callJs("testReload", log);
     }
 
     //可以处理同步登陆

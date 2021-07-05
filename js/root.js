@@ -63,8 +63,8 @@ function checkResult(result) {
 
 }
 
-function onMessage(player, message) {
-
+function onMessage(message, session, jsb) {
+    jsb.sendMessage(session, "sb")
 }
 
 function testReload(log) {
