@@ -65,6 +65,7 @@ function checkResult(result) {
 
 function onMessage(message, session, jsb) {
     jsb.sendMessage(session, "sb")
+    jsb.sendMessage(session, JSONfn.stringify(gezi01));
 }
 
 function testReload(log) {
