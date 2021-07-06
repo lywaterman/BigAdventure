@@ -15,9 +15,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class UpdatePlayerOnline {
-    @Value("${bad_sid}")
-    int serverId;
-
     @Autowired
     RedissonClient redissonClient;
 

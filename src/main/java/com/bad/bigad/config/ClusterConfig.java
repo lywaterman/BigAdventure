@@ -1,6 +1,10 @@
 package com.bad.bigad.config;
 
 import com.bad.bigad.util.Util;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -17,28 +21,44 @@ import java.util.Map;
 @Slf4j
 @RefreshScope
 public class ClusterConfig {
-    @Value("${bad_sid}")
-    String curServerID;
-
     @Value("${servers}")
     String serverList;
+
+    static public int curServerID;
+
+    static {
+        curServerID = Integer.parseInt(System.getenv("bad_sid"));
+    }
 
     Map<Integer, String> serverNodes;
 
     @EventListener(RefreshScopeRefreshedEvent.class)
     public void onRefresh(RefreshScopeRefreshedEvent event) {
-        serverNodes =  Util.gson.fromJson(serverList, Map.class);
+        ObjectReader reader = new ObjectMapper().readerFor(new TypeReference<Map<Integer, String>>() {
+        });
+        try {
+            serverNodes = reader.readValue(serverList);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     public Map<Integer, String> getServerNodes() {
         if (serverNodes == null) {
-            serverNodes =  Util.gson.fromJson(serverList, Map.class);
+            ObjectReader reader = new ObjectMapper().readerFor(new TypeReference<Map<Integer, String>>() {
+            });
+            try {
+                serverNodes = reader.readValue(serverList);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
 
         return serverNodes;
     }
 
     public String getNodeAddr(int sid) {
+        getServerNodes();
         return serverNodes.get(sid);
     }
 

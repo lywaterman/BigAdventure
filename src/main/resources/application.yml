@@ -15,6 +15,9 @@ mybatis:
   mapper-locations: classpath*:mapper/*Mapper.xml
   type-aliases-package: com.bad.bigad.entity
 
+server:
+  port : 8080
+
 nacos:
   config:
     server-addr: 127.0.0.1:8848
@@ -25,6 +28,4 @@ jwt_key: rgsnsm#ldyh*ws%l&hdpmnmw@xyhndes
 jwt_minute: 360
 jwt_pub: bad
 
-bad_sid: 0
-
-servers: {"0": "127.0.0.1:8080"}
+servers: {"0": "127.0.0.1:8080", "1": "127.0.0.1:8081"}

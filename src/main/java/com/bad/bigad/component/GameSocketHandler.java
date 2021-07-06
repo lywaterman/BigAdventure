@@ -23,14 +23,11 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
 public class GameSocketHandler extends TextWebSocketHandler {
-
-    @Value("${bad_sid}")
-    int serverId;
-
     @Autowired
     PlayerService playerService;
 
@@ -100,12 +97,14 @@ public class GameSocketHandler extends TextWebSocketHandler {
                     playerService.kickPlayer(id, "您在其他地方登陆了");
 
                     //如果不再本服务器，rpc 调用
-                    if (playerOnlineStatus.getServerId() != serverId) {
+                    if (playerOnlineStatus.getServerId() != clusterConfig.curServerID) {
+                        String serverUrl = new StringBuilder()
+                                .append("http://")
+                                .append(clusterConfig.getNodeAddr(playerOnlineStatus.getServerId()))
+                                .append("/kickPlayer?id={id}").toString();
+
                         restTemplate.getForObject(
-                                new StringBuilder()
-                                        .append("http://")
-                                        .append(clusterConfig.getNodeAddr(playerOnlineStatus.getServerId()))
-                                        .append("/kickPlayer?id={id}").toString(),
+                                serverUrl,
                                 Boolean.class,
                                 id);
                     }
@@ -115,14 +114,15 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 WsSessionManager.instance.add(
                         id,
                         session);
-                PlayerOnlineStatus status = new PlayerOnlineStatus(serverId);
+                PlayerOnlineStatus status = new PlayerOnlineStatus(clusterConfig.curServerID);
+                map.put(id, status, 10, TimeUnit.SECONDS);
                 PlayerManager.instance.add(
                         id,
                         player,
                         status);
 
             } catch (Exception e) {
-                log.error(String.valueOf(e.getStackTrace()));
+                log.error(String.valueOf(e.getStackTrace().toString()));
             } finally {
                 lock.unlock();
             }
