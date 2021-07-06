@@ -42,7 +42,7 @@ client.onConnect = function (frame) {
             destination: "/app/chat.sendMsg",
             body: JSON.stringify(chatMessage)
         })
-    }, 1000)
+    }, 5000)
 
     // var pchatMessage = {
     //     content: 'hello,帅锅好',

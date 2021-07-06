@@ -32,6 +32,9 @@ public class RabbitmqConfig {
     @Autowired
     ChatService chatService;
 
+    @Autowired
+    ClusterConfig clusterConfig;
+
     //绑定键
     public final static String msgTopicKey   = "topic.public";
     //队列
@@ -42,6 +45,16 @@ public class RabbitmqConfig {
         return new Queue(msgTopicQueue, true);
     }
 
+    @Bean
+    public Queue fanoutQueue() {
+        return new Queue(clusterConfig.getChatQueueName(), true);
+    }
+
+    @Bean
+    public FanoutExchange falloutExchange() {
+        return new FanoutExchange("chatFanoutExchange", true, false);
+    }
+
     //使用FanoutExchange来实现分布式聊天
     @Bean
     public TopicExchange exchange() {
@@ -50,7 +63,8 @@ public class RabbitmqConfig {
 
     @Bean
     Binding bindingExchangeMessage() {
-        return BindingBuilder.bind(topicQueue()).to(exchange()).with(msgTopicKey);
+        //return BindingBuilder.bind(topicQueue()).to(exchange()).with(msgTopicKey);
+        return BindingBuilder.bind(fanoutQueue()).to(falloutExchange());
     }
 
     @Bean
@@ -97,7 +111,8 @@ public class RabbitmqConfig {
     @Bean
     public SimpleMessageListenerContainer messageContainer() {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory());
-        container.setQueues(topicQueue());
+        //container.setQueues(topicQueue());
+        container.setQueues(fanoutQueue());
         container.setExposeListenerChannel(true);
         container.setMaxConcurrentConsumers(1);
         container.setConcurrentConsumers(1);

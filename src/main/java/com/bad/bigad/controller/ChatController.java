@@ -25,9 +25,11 @@ public class ChatController {
     public void sendMsg(@Payload ChatMessage chatMessage, Principal principal) {
         String name = ((UserPrincipal)principal).getNick_name();
         chatMessage.setSender(name);
-        rabbitTemplate.convertAndSend(
-                "topicWebSocketExchange",
-                "topic.public",
-                Util.gson.toJson(chatMessage));
+//        rabbitTemplate.convertAndSend(
+//                "topicWebSocketExchange",
+//                "topic.public",
+//                Util.gson.toJson(chatMessage));
+
+        rabbitTemplate.convertAndSend("chatFanoutExchange", "",  Util.gson.toJson(chatMessage));
     }
 }

@@ -17,6 +17,9 @@ import java.util.Map;
 @Slf4j
 @RefreshScope
 public class ClusterConfig {
+    @Value("${bad_sid}")
+    String curServerID;
+
     @Value("${servers}")
     String serverList;
 
@@ -37,5 +40,9 @@ public class ClusterConfig {
 
     public String getNodeAddr(int sid) {
         return serverNodes.get(sid);
+    }
+
+    public String getChatQueueName() {
+        return "topic_queue_" + curServerID;
     }
 }
