@@ -2,7 +2,7 @@ Object.assign(global, { WebSocket: require('websocket').w3cwebsocket });
 StompJs = require('@stomp/stompjs');
 const client = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/chat?token='+
-    'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYWQiLCJpZCI6IjYwNzIzNDIzMDQ1OTU2ODEyOCIsImV4cCI6MTYyNTE0MzY2NiwiaWF0IjoxNjI1MTIyMDY2fQ.fbmIHOgsKgq_gs77mFJZSWCH0OM9rN54VtXfUzngQuM',
+    'eyJhbGciOiJIUzI1NiJ9.eyJuaWNrX25hbWUiOiLmtIvmtIsyMjIyIiwiaXNzIjoiYmFkIiwiaWQiOiI2MDcyMzQyMzA0NTk1NjgxMjgiLCJleHAiOjE2MjU1NzIzMjgsImlhdCI6MTYyNTU1MDcyOH0.B6O8CG_oWQBfEWmI7Z9BpHMU-FxPZB2vB5GW8KPA6qQ',
     connectHeaders: {
         //token: 'eyJhbGciOiJIUzI1NiJ9.eyJ3eF9uYW1lIjoibHkxMTEyMjIxMSIsInd4X25pY2tfbmFtZSI6Iua0i-a0izIyMjIiLCJpc3MiOiJiYWQiLCJleHAiOjE2MjQ4Nzc5MzAsImlhdCI6MTYyNDg1NjMzMH0.TC2rgbT9aJwjb-6FjHs7_eOtUFnQofUKPMPzhaE3QF4'
     },
@@ -25,7 +25,7 @@ private_callback = function (message) {
 }
 
 client.onConnect = function (frame) {
-    client.subscribe('/topic/movie', public_callback)
+    client.subscribe('/topic/public', public_callback)
     client.subscribe('/user/topic/msg', private_callback)
     // Do something, all subscribes must be done is this callback
     // This is needed because this will be executed after a (re)connect
@@ -33,7 +33,7 @@ client.onConnect = function (frame) {
     var chatMessage = {
         content: 'hello，大家好',
         type: 'CHAT',
-        to: 'movie',
+        to: 'public',
         toUser:false
     }
 

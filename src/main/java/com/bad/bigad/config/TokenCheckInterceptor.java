@@ -43,7 +43,9 @@ public class TokenCheckInterceptor implements HandshakeInterceptor {
         log.info("websocket链接认证成功");
         String userName = (String) claims.get("id");
         //保存认证用户，用于验证
-        attributes.put("user", (Principal) () -> userName);
+        UserPrincipal principal = new UserPrincipal(userName);
+        principal.setNick_name((String) claims.get("nick_name"));
+        attributes.put("user", principal);
 
         //id写入session使用
         attributes.put("id", userName);

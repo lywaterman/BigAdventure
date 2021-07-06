@@ -1,5 +1,6 @@
 package com.bad.bigad.controller;
 
+import com.bad.bigad.config.UserPrincipal;
 import com.bad.bigad.util.Util;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMsg")
     public void sendMsg(@Payload ChatMessage chatMessage, Principal principal) {
-        String name = principal.getName();
+        String name = ((UserPrincipal)principal).getNick_name();
         chatMessage.setSender(name);
         rabbitTemplate.convertAndSend(
                 "topicWebSocketExchange",

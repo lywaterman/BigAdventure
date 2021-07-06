@@ -26,7 +26,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-public class WebSocketHandler extends TextWebSocketHandler {
+public class GameSocketHandler extends TextWebSocketHandler {
 
     @Value("${bad_sid}")
     int serverId;

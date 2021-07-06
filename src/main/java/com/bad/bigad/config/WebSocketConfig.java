@@ -1,18 +1,13 @@
 package com.bad.bigad.config;
 
+import com.bad.bigad.component.ChatSocketHandler;
+import com.bad.bigad.component.GameSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
-import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
-
-import java.security.Principal;
-import java.util.Map;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -29,7 +24,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
     MyHandshakeHandler myHandshakeHandler;
 
     @Autowired
-    WebSocketHandler webSocketHandler;
+    GameSocketHandler gameSocketHandler;
+
+    @Autowired
+    ChatSocketHandler chatSocketHandler;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -46,14 +44,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/game")
+        registry.addHandler(gameSocketHandler, "/game")
                 .addInterceptors(tokenCheckInterceptor)
                 .setHandshakeHandler(myHandshakeHandler);
 
-        registry.addHandler(webSocketHandler, "/game")
+        registry.addHandler(gameSocketHandler, "/game")
                 .setAllowedOrigins("*")
                 .withSockJS()
                 .setHeartbeatTime(60_000);
+
+//        registry.addHandler(chatSocketHandler, "/chat");
+//        registry.addHandler(chatSocketHandler, "/chat")
+//                .setAllowedOrigins("*")
+//                .withSockJS()
+//                .setHeartbeatTime(60_000);
     }
 
 

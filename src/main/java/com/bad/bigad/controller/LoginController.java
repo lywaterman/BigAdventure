@@ -210,6 +210,7 @@ public class LoginController {
     public String createPlayerToken(Player player) {
         Map<String,Object> map = new HashMap<>();
         map.put("id", player.getIdStr());
+        map.put("nick_name", player.getWx_nick_name());
         return creatToken(map);
     }
 
