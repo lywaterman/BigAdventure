@@ -1,11 +1,13 @@
 package com.bad.bigad.config;
 
 import com.bad.bigad.component.GameSocketHandler;
+import com.bad.bigad.manager.WsSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.*;
@@ -88,10 +90,29 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 
                     @Override
                     public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
+                        super.afterConnectionEstablished(session);
                         // We will store current user's session into WebsocketSessionHolder after connection is established
                         String username = session.getPrincipal().getName();
+                        Long id = Long.parseLong(username);
 
-                        super.afterConnectionEstablished(session);
+                        WebSocketSession curSession = WsSessionManager.instance.getChatSession(id);
+
+                        if (curSession != null) {
+                            WsSessionManager.instance.removeAddCloseChatSession(id);
+                        }
+
+                        WsSessionManager.instance.addChatSession(id, session);
+
+                    }
+
+                    @Override
+                    public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
+                        super.afterConnectionClosed(session, closeStatus);
+                        String username = session.getPrincipal().getName();
+                        Long id = Long.parseLong(username);
+
+                        WsSessionManager.instance.removeChatSession(id);
+
                     }
                 };
             }
