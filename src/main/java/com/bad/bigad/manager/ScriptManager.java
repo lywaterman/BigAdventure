@@ -35,6 +35,8 @@ public class ScriptManager {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

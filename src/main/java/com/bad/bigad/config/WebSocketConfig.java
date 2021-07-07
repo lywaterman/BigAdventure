@@ -3,9 +3,13 @@ package com.bad.bigad.config;
 import com.bad.bigad.component.GameSocketHandler;
 import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.WsSessionManager;
+import com.bad.bigad.model.ChatMessage;
+import com.bad.bigad.service.ChatService;
+import com.bad.bigad.util.BridgeForJs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.CloseStatus;
@@ -33,7 +37,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
     GameSocketHandler gameSocketHandler;
 
     @Autowired
-    ScriptManager scriptManager;
+    ChatService chatService;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -102,8 +106,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
                         WebSocketSession curSession = WsSessionManager.instance.getChatSession(id);
 
                         if (curSession != null) {
-                            //要看看是不是同步的
-                            scriptManager.callJs("onChatAnotherLogin", session);
+//                            ChatMessage msg = new ChatMessage();
+//                            msg.setSender("sys");
+//                            msg.setTo(username);
+//                            msg.setToUser(true);
+//                            msg.setType(ChatMessage.MessageType.ANOTHER);
+//                            msg.setContent("您在其他地方登陆了");
+//                            chatService.sendMsg(msg);
                             WsSessionManager.instance.removeAddCloseChatSession(id);
                         }
 
@@ -128,8 +137,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-//    @Override
-//    public void configureClientInboundChannel(ChannelRegistration registration) {
-//        registration.interceptors(headerParamInterceptor);
-//    }
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(headerParamInterceptor);
+    }
 }

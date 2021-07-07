@@ -23,13 +23,14 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMsg")
     public void sendMsg(@Payload ChatMessage chatMessage, Principal principal) {
-        String name = ((UserPrincipal)principal).getNick_name();
-        chatMessage.setSender(name);
-//        rabbitTemplate.convertAndSend(
-//                "topicWebSocketExchange",
-//                "topic.public",
-//                Util.gson.toJson(chatMessage));
+        String nick_name = ((UserPrincipal)principal).getNick_name();
+        chatMessage.setSender(nick_name);
+        chatMessage.setSender_id(((UserPrincipal)principal).getName());
+        rabbitTemplate.convertAndSend(
+                "topicWebSocketExchange",
+                "topic.public",
+                Util.gson.toJson(chatMessage));
 
-        rabbitTemplate.convertAndSend("chatFanoutExchange", "",  Util.gson.toJson(chatMessage));
+       // rabbitTemplate.convertAndSend("chatFanoutExchange", "",  Util.gson.toJson(chatMessage));
     }
 }
