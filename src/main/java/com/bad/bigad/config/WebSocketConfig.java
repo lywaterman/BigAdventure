@@ -98,6 +98,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
                         WebSocketSession curSession = WsSessionManager.instance.getChatSession(id);
 
                         if (curSession != null) {
+                            //要看看是不是同步的
                             WsSessionManager.instance.removeAddCloseChatSession(id);
                         }
 
@@ -111,7 +112,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
                         String username = session.getPrincipal().getName();
                         Long id = Long.parseLong(username);
 
-                        WsSessionManager.instance.removeChatSession(id);
+                        if (WsSessionManager.instance.get(id) == session) {
+                            WsSessionManager.instance.removeChatSession(id);
+                        }
 
                     }
                 };

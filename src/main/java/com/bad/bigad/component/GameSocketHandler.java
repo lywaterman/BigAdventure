@@ -133,12 +133,15 @@ public class GameSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Long id = Long.parseLong((String) session.getAttributes().get("id"));
 
-        WsSessionManager.instance.remove(
-                id
-        );
-        PlayerManager.instance.remove(
-                id
-        );
+        if (WsSessionManager.instance.get(id) == session) {
+            WsSessionManager.instance.remove(
+                    id
+            );
+
+            PlayerManager.instance.remove(
+                    id
+            );
+        }
     }
 
 }
