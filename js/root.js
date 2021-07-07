@@ -63,9 +63,14 @@ function checkResult(result) {
 
 }
 
-function onMessage(message, session, jsb) {
+//game socket 收到消息
+function onMessage(message, session, player, jsb) {
     jsb.sendMessage(session, "sb")
     jsb.sendMessage(session, JSONfn.stringify(gezi01));
+}
+
+function onChatAnotherLogin(session) {
+    //你的聊天在其他地方登陆了, 这里发消息
 }
 
 function testReload(log) {

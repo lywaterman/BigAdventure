@@ -43,7 +43,12 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
-        scriptManager.callJs("onMessage", message.getPayload(), session, BridgeForJs.instance);
+        String strId = (String) session.getAttributes().get("id");
+        Long id = Long.parseLong(strId);
+
+        Player player = PlayerManager.instance.get(id);
+
+        scriptManager.callJs("onMessage", message.getPayload(), session, player, BridgeForJs.instance);
     }
 
     @Scheduled(fixedRate = 1000)
@@ -133,15 +138,10 @@ public class GameSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Long id = Long.parseLong((String) session.getAttributes().get("id"));
 
-        if (WsSessionManager.instance.get(id) == session) {
-            WsSessionManager.instance.remove(
-                    id
-            );
-
-            PlayerManager.instance.remove(
-                    id
-            );
-        }
+        WsSessionManager.instance.remove(
+                id,
+                session
+        );
     }
 
 }

@@ -1,6 +1,7 @@
 package com.bad.bigad.config;
 
 import com.bad.bigad.component.GameSocketHandler;
+import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.WsSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 
     @Autowired
     GameSocketHandler gameSocketHandler;
+
+    @Autowired
+    ScriptManager scriptManager;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -99,6 +103,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 
                         if (curSession != null) {
                             //要看看是不是同步的
+                            scriptManager.callJs("onChatAnotherLogin", session);
                             WsSessionManager.instance.removeAddCloseChatSession(id);
                         }
 
@@ -112,10 +117,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
                         String username = session.getPrincipal().getName();
                         Long id = Long.parseLong(username);
 
-                        if (WsSessionManager.instance.get(id) == session) {
-                            WsSessionManager.instance.removeChatSession(id);
-                        }
-
+                        WsSessionManager.instance.removeChatSession(id, session);
                     }
                 };
             }

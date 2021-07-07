@@ -25,8 +25,8 @@ public enum WsSessionManager {
         chatSessionPool.put(playerId, session);
     }
 
-    public void removeChatSession(Long playerId) {
-        chatSessionPool.remove(playerId);
+    public void removeChatSession(Long playerId, WebSocketSession session) {
+        chatSessionPool.remove(playerId, session);
     }
 
 
@@ -49,8 +49,8 @@ public enum WsSessionManager {
         sessionPool.put(playerId, session);
     }
 
-    public void remove(Long playerId) {
-        sessionPool.remove(playerId);
+    public void remove(Long playerId, WebSocketSession session) {
+        sessionPool.remove(playerId, session);
     }
 
 
