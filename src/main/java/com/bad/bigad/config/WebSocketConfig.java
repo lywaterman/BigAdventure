@@ -47,7 +47,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
     @Autowired
     ChatService chatService;
 
-    private MessageChannel outChannel;
+    private final MessageChannel outChannel;
 
     @Autowired
     public WebSocketConfig(MessageChannel clientOutboundChannel) {
