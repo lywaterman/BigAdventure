@@ -13,7 +13,6 @@ import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -22,7 +21,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -44,15 +42,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
     ScriptManager scriptManager;
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message)
-            throws InterruptedException, IOException {
-//        for(WebSocketSession webSocketSession : sessions) {
-//            Map value = new Gson().fromJson(message.getPayload(), Map.class);
-//            webSocketSession.sendMessage(new TextMessage("Hello " + value.get("name") + " !"));
-//        }
-//        String userName = (String) session.getAttributes().get("id");
-//        session.sendMessage(new TextMessage("Hello " + userName));
-
+    public void handleTextMessage(WebSocketSession session, TextMessage message) {
         scriptManager.callJs("onMessage", message.getPayload(), session, BridgeForJs.instance);
     }
 
@@ -97,16 +87,21 @@ public class GameSocketHandler extends TextWebSocketHandler {
                     playerService.kickPlayer(id, "您在其他地方登陆了");
 
                     //如果不再本服务器，rpc 调用
-                    if (playerOnlineStatus.getServerId() != clusterConfig.curServerID) {
-                        String serverUrl = new StringBuilder()
-                                .append("http://")
-                                .append(clusterConfig.getNodeAddr(playerOnlineStatus.getServerId()))
-                                .append("/kickPlayer?id={id}").toString();
+                    if (playerOnlineStatus.getServerId() != ClusterConfig.curServerID) {
+                        String serverUrl = "http://" +
+                                clusterConfig.getNodeAddr(playerOnlineStatus.getServerId()) +
+                                "/kickPlayer?id={id}";
 
-                        restTemplate.getForObject(
+                        Boolean result = restTemplate.getForObject(
                                 serverUrl,
                                 Boolean.class,
                                 id);
+
+                        if (result == null || !result) {
+                            session.sendMessage(new TextMessage("你正在游戏中，请稍后再试"));
+                            session.close();
+                            return;
+                        }
                     }
                 }
 
@@ -114,7 +109,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 WsSessionManager.instance.add(
                         id,
                         session);
-                PlayerOnlineStatus status = new PlayerOnlineStatus(clusterConfig.curServerID);
+                PlayerOnlineStatus status = new PlayerOnlineStatus(ClusterConfig.curServerID);
                 map.put(id, status, 10, TimeUnit.SECONDS);
                 PlayerManager.instance.add(
                         id,
@@ -122,7 +117,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
                         status);
 
             } catch (Exception e) {
-                log.error(String.valueOf(e.getStackTrace().toString()));
+                log.error(e.getMessage());
+                session.sendMessage(new TextMessage("服务器异常，请稍后再试"));
+                session.close();
             } finally {
                 lock.unlock();
             }
@@ -133,7 +130,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Long id = Long.parseLong((String) session.getAttributes().get("id"));
 
         WsSessionManager.instance.remove(
