@@ -1,8 +1,8 @@
 Object.assign(global, { WebSocket: require('websocket').w3cwebsocket });
 StompJs = require('@stomp/stompjs');
 const client = new StompJs.Client({
-    brokerURL: 'ws://localhost:8081/chat?token='+
-    'eyJhbGciOiJIUzI1NiJ9.eyJuaWNrX25hbWUiOiLmtIvmtIsyMjIyIiwiaXNzIjoiYmFkIiwiaWQiOiI2MDcyMzQyMzA0NTk1NjgxMjgiLCJleHAiOjE2MjU2NjI1MzYsImlhdCI6MTYyNTY0MDkzNn0.K5EzoNIbd4mee16CdVXZoiulOSUPEieLEoYrbmKYOLg',
+    brokerURL: 'ws://localhost:8080/chat?token='+
+    'eyJhbGciOiJIUzI1NiJ9.eyJuaWNrX25hbWUiOiLmtIvmtIsyMjIyIiwiaXNzIjoiYmFkIiwiaWQiOiI2MDcyMzQyMzA0NTk1NjgxMjgiLCJleHAiOjE2MjU3MzgzMDIsImlhdCI6MTYyNTcxNjcwMn0.Mzi-12kU5Kf1mUSFoA8LIhRpoQHOWp1dCcjtpVWMZb0',
     connectHeaders: {
         //token: 'eyJhbGciOiJIUzI1NiJ9.eyJ3eF9uYW1lIjoibHkxMTEyMjIxMSIsInd4X25pY2tfbmFtZSI6Iua0i-a0izIyMjIiLCJpc3MiOiJiYWQiLCJleHAiOjE2MjQ4Nzc5MzAsImlhdCI6MTYyNDg1NjMzMH0.TC2rgbT9aJwjb-6FjHs7_eOtUFnQofUKPMPzhaE3QF4'
     },
@@ -40,17 +40,29 @@ client.onConnect = function (frame) {
     var chatMessage = {
         content: '你好，sb',
         type: 'CHAT',
-        to: '607988077595463680',
-        toUser:true
+        to: 'public',
+        toUser:false
     }
 
 
     setInterval(function () {
+        // client.publish({
+        //     destination: "/app/chat.sendMsg",
+        //     body: JSON.stringify(chatMessage),
+        //     headers: {receipt: "fsfsdfsdfsdfds"}
+        // })
+
         client.publish({
             destination: "/app/chat.sendMsg",
-            body: JSON.stringify(chatMessage)
+            body: JSON.stringify(chatMessage),
+            headers: {receipt: Math.random()}
         })
+
+        // client.watchForReceipt("fsfsdfsdfsdfds", function (frame) {
+        //     console.log("watch for receipt");
+        // })
     }, 5000)
+
 
     // var pchatMessage = {
     //     content: 'hello,帅锅好',

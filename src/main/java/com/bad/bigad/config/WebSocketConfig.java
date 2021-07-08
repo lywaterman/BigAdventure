@@ -19,6 +19,7 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.AbstractSubscribableChannel;
+import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.ExecutorChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.client.RestTemplate;
@@ -152,10 +153,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
         });
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 //    @Override
 //    public void configureClientInboundChannel(ChannelRegistration registration) {
 //        registration.interceptors(headerParamInterceptor);
@@ -164,13 +161,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
 
-        registration.interceptors(new ExecutorChannelInterceptor() {
+        registration.interceptors(new ChannelInterceptor() {
 
             @Override
-            public void afterMessageHandled(Message<?> inMessage,
-                                            MessageChannel inChannel, MessageHandler handler, Exception ex) {
+            public void postSend(Message<?> inMessage, MessageChannel channel, boolean sent) {
 
                 StompHeaderAccessor inAccessor = StompHeaderAccessor.wrap(inMessage);
+                String des = inAccessor.getDestination();
+                if (des == null || !des.equals("/app/chat.sendMsg")) {
+                    return;
+                }
                 String receipt = inAccessor.getReceipt();
                 if (StringUtils.isEmpty(receipt)) {
                     return;
@@ -188,6 +188,34 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
             }
         });
     }
+
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) {
+//
+//        registration.interceptors(new ExecutorChannelInterceptor() {
+//
+//            @Override
+//            public void afterMessageHandled(Message<?> inMessage,
+//                                            MessageChannel inChannel, MessageHandler handler, Exception ex) {
+//
+//                StompHeaderAccessor inAccessor = StompHeaderAccessor.wrap(inMessage);
+//                String receipt = inAccessor.getReceipt();
+//                if (StringUtils.isEmpty(receipt)) {
+//                    return;
+//                }
+//
+//                StompHeaderAccessor outAccessor = StompHeaderAccessor.create(StompCommand.RECEIPT);
+//                outAccessor.setSessionId(inAccessor.getSessionId());
+//                outAccessor.setReceiptId(receipt);
+//                outAccessor.setLeaveMutable(true);
+//
+//                Message<byte[]> outMessage =
+//                        MessageBuilder.createMessage(new byte[0], outAccessor.getMessageHeaders());
+//
+//                outChannel.send(outMessage);
+//            }
+//        });
+//    }
 
     //SimpleBrokerMessageHandler doesn't support RECEIPT frame, hence we emulate it this way
 //    @Bean

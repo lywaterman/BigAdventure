@@ -12,9 +12,11 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.client.RestTemplate;
 
 import javax.script.*;
 import java.io.File;
@@ -92,6 +94,11 @@ import java.util.concurrent.Executors;
 @EnableFeignClients
 @EnableDiscoveryClient
 public class BigadApplication {
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
     public static void main(String[] args) {
         SpringApplication.run(BigadApplication.class, args);
     }
