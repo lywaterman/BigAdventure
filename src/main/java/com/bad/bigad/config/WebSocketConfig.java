@@ -166,9 +166,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
             @Override
             public Message<?> preSend(Message<?> inMessage, MessageChannel channel) {
                 StompHeaderAccessor inAccessor = StompHeaderAccessor.wrap(inMessage);
+                String des = inAccessor.getDestination();
+                if (StompCommand.SUBSCRIBE.equals(inAccessor.getCommand())) {
+                    //可以限定只能订阅的频道
+                }
 
                 if (StompCommand.SEND.equals(inAccessor.getCommand())) {
-                    String des = inAccessor.getDestination();
                     if (des == null || !des.equals("/app/chat.sendMsg")) {
                         throw new IllegalArgumentException("can only pushlish message to /app/chat/sendMsg");
                     }
