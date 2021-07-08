@@ -164,6 +164,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
         registration.interceptors(new ChannelInterceptor() {
 
             @Override
+            public Message<?> preSend(Message<?> inMessage, MessageChannel channel) {
+                StompHeaderAccessor inAccessor = StompHeaderAccessor.wrap(inMessage);
+
+                if (StompCommand.SEND.equals(inAccessor.getCommand())) {
+                    String des = inAccessor.getDestination();
+                    if (des == null || !des.equals("/app/chat.sendMsg")) {
+                        throw new IllegalArgumentException("can only pushlish message to /app/chat/sendMsg");
+                    }
+                }
+
+                return inMessage;
+            }
+
+            @Override
             public void postSend(Message<?> inMessage, MessageChannel channel, boolean sent) {
 
                 StompHeaderAccessor inAccessor = StompHeaderAccessor.wrap(inMessage);

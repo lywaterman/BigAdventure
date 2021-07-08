@@ -52,8 +52,14 @@ client.onConnect = function (frame) {
         //     headers: {receipt: "fsfsdfsdfsdfds"}
         // })
 
+        // client.publish({
+        //     destination: "/app/chat.sendMsg",
+        //     body: JSON.stringify(chatMessage),
+        //     headers: {receipt: Math.random()}
+        // })
+
         client.publish({
-            destination: "/app/chat.sendMsg",
+            destination: "/topic/pubic",
             body: JSON.stringify(chatMessage),
             headers: {receipt: Math.random()}
         })
