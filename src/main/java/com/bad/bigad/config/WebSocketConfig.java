@@ -8,6 +8,7 @@ import com.bad.bigad.service.ChatService;
 import com.bad.bigad.util.BridgeForJs;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -17,6 +18,7 @@ import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.AbstractSubscribableChannel;
 import org.springframework.messaging.support.ExecutorChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +28,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -185,4 +188,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
             }
         });
     }
+
+    //SimpleBrokerMessageHandler doesn't support RECEIPT frame, hence we emulate it this way
+//    @Bean
+//    public ApplicationListener<SessionSubscribeEvent> webSocketEventListener(
+//            final AbstractSubscribableChannel clientOutboundChannel) {
+//        return event -> {
+//            Message<byte[]> message = event.getMessage();
+//            StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(message);
+//            if (stompHeaderAccessor.getReceipt() != null) {
+//                stompHeaderAccessor.setHeader("stompCommand", StompCommand.RECEIPT);
+//                stompHeaderAccessor.setReceiptId(stompHeaderAccessor.getReceipt());
+//                clientOutboundChannel.send(
+//                        MessageBuilder.createMessage(new byte[0], stompHeaderAccessor.getMessageHeaders()));
+//            }
+//        };
+//    }
 }
