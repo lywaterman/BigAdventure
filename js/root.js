@@ -73,10 +73,16 @@ function onLogin(session, player) {
     jsb.sendMessage(session, "hello, "+player.getWx_name())
 }
 
+function onLoginOut(session, player) {
+    jsb.sendMesssage(session, "goodbye, "+player.getWx_name())
+}
+
 //game socket 收到消息
 function onMessage(message, session, player) {
-    jsb.sendMessage(session, "sb")
-    jsb.sendMessage(session, JSONfn.stringify(gezi01));
+    //jsb.sendMessage(session, "sb")
+    //jsb.sendMessage(session, JSONfn.stringify(gezi01));
+
+    jsb.sendMessage(session, "你说啥我就说啥:"+message)
 }
 
 
