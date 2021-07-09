@@ -28,9 +28,9 @@ public enum PlayerManager {
         status_map.put(playerId, status);
     }
 
-    public void remove(Long playerId) {
-        players.remove(playerId);
+    public Player remove(Long playerId) {
         status_map.remove(playerId);
+        return players.remove(playerId);
     }
 
     public Player get(Long playerId) {

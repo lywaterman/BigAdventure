@@ -142,7 +142,6 @@ public class GameSocketHandler extends TextWebSocketHandler {
             return;
         }
 
-
         scriptManager.callJs("onLogin", session, player);
     }
 
@@ -157,7 +156,8 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
         if (removed) {
             //给玩家下线
-            PlayerManager.instance.remove(id);
+            Player player = PlayerManager.instance.remove(id);
+            scriptManager.callJs("onLoginout", session, player);
         }
     }
 
