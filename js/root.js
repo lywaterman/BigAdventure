@@ -68,8 +68,13 @@ var chat_another_login = JSON.stringify({
     type: 'LOGIN'
 })
 
+//玩家登陆成功事件
+function onLogin(session, player) {
+    jsb.sendMessage(session, "hello, "+player.getWx_name())
+}
+
 //game socket 收到消息
-function onMessage(message, session, player, jsb) {
+function onMessage(message, session, player) {
     jsb.sendMessage(session, "sb")
     jsb.sendMessage(session, JSONfn.stringify(gezi01));
 }

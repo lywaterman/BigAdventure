@@ -1,5 +1,6 @@
 package com.bad.bigad.manager;
 
+import com.bad.bigad.util.BridgeForJs;
 import com.coveo.nashorn_modules.FilesystemFolder;
 import com.coveo.nashorn_modules.Require;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
@@ -44,6 +45,7 @@ public class ScriptManager {
     public boolean reload() {
         try {
             Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
+            scriptEngine.put("jsb", BridgeForJs.instance);
             scriptEngine.eval(Files.newBufferedReader(rootFile.toPath()));
         } catch (ScriptException e) {
             e.printStackTrace();
@@ -81,6 +83,7 @@ public class ScriptManager {
 
         //赋予common.js的require能力
         Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
+        scriptEngine.put("jsb", BridgeForJs.instance);
 
         //得到root.js
         //File rootFile = ResourceUtils.getFile("classpath:js/root.js");

@@ -54,7 +54,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
         Player player = PlayerManager.instance.get(id);
 
-        scriptManager.callJs("onMessage", message.getPayload(), session, player, BridgeForJs.instance);
+        scriptManager.callJs("onMessage", message.getPayload(), session, player);
     }
 
     @Scheduled(fixedRate = 1000)
@@ -132,13 +132,18 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 log.error(e.getMessage());
                 session.sendMessage(new TextMessage("服务器异常，请稍后再试"));
                 session.close();
+                return;
             } finally {
                 lock.unlock();
             }
         } else {
             session.sendMessage(new TextMessage("同一账号同时登陆太多，请稍后再试"));
             session.close();
+            return;
         }
+
+
+        scriptManager.callJs("onLogin", session, player);
     }
 
     @Override
