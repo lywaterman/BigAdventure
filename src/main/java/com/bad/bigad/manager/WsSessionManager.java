@@ -49,8 +49,8 @@ public enum WsSessionManager {
         sessionPool.put(playerId, session);
     }
 
-    public void remove(Long playerId, WebSocketSession session) {
-        sessionPool.remove(playerId, session);
+    public boolean remove(Long playerId, WebSocketSession session) {
+        return sessionPool.remove(playerId, session);
     }
 
 
@@ -60,6 +60,17 @@ public enum WsSessionManager {
 
     public void removeAddClose(Long playerId) {
         WebSocketSession session = sessionPool.remove(playerId);
+        if (session != null) {
+            try {
+                session.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void close(Long playerId) {
+        WebSocketSession session = sessionPool.get(playerId);
         if (session != null) {
             try {
                 session.close();

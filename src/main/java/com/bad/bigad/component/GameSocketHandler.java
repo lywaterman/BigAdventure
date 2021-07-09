@@ -115,11 +115,12 @@ public class GameSocketHandler extends TextWebSocketHandler {
                         id,
                         session);
                 PlayerOnlineStatus status = new PlayerOnlineStatus(ClusterConfig.curServerID);
-                map.put(id, status, 10, TimeUnit.SECONDS);
                 PlayerManager.instance.add(
                         id,
                         player,
                         status);
+
+                map.put(id, status, 10, TimeUnit.SECONDS);
 
             } catch (Exception e) {
                 log.error(e.getMessage());
@@ -138,10 +139,15 @@ public class GameSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Long id = Long.parseLong((String) session.getAttributes().get("id"));
 
-        WsSessionManager.instance.remove(
+        boolean removed = WsSessionManager.instance.remove(
                 id,
                 session
         );
+
+        if (removed) {
+            //给玩家下线
+            PlayerManager.instance.remove(id);
+        }
     }
 
 }

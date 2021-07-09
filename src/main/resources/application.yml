@@ -25,7 +25,7 @@ nacos:
     server-addr: 127.0.0.1:8848
 
 jwt_key: rgsnsm#ldyh*ws%l&hdpmnmw@xyhndes
-jwt_minute: 360
+jwt_minute: 360000
 jwt_pub: bad
 
 servers: {"0": "127.0.0.1:8080", "1": "127.0.0.1:8081"}

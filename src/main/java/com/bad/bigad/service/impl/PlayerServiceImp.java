@@ -54,8 +54,7 @@ public class PlayerServiceImp implements PlayerService {
     public  boolean kickPlayer(Long id, String message) {
         WsSessionManager.instance.sendMessage(id, message);
 
-        WsSessionManager.instance.removeAddClose(id);
-        PlayerManager.instance.remove(id);
+        WsSessionManager.instance.close(id);
 
         return true;
     }
