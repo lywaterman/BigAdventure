@@ -82,12 +82,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
                 .setAllowedOrigins("*")
                 .withSockJS()
                 .setHeartbeatTime(60_000);
-
-//        registry.addHandler(chatSocketHandler, "/chat");
-//        registry.addHandler(chatSocketHandler, "/chat")
-//                .setAllowedOrigins("*")
-//                .withSockJS()
-//                .setHeartbeatTime(60_000);
     }
 
 
