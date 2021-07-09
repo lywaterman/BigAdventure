@@ -70,11 +70,11 @@ var chat_another_login = JSON.stringify({
 
 //玩家登陆成功事件
 function onLogin(session, player) {
-    jsb.sendMessage(session, "hello, "+player.getWx_name())
+    jsb.sendMessage(session, "你好, "+player.getWx_name())
 }
 
-function onLoginOut(session, player) {
-    jsb.sendMesssage(session, "goodbye, "+player.getWx_name())
+function onLoginout(session, player) {
+    jsb.sendMessage(session, "goodbye, "+player.getWx_name())
 }
 
 //game socket 收到消息
