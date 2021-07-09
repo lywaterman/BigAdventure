@@ -24,6 +24,9 @@ nacos:
   discovery:
     server-addr: 127.0.0.1:8848
 
+update_player_status: 10000
+player_status_ttl: 30
+
 jwt_key: rgsnsm#ldyh*ws%l&hdpmnmw@xyhndes
 jwt_minute: 360000
 jwt_pub: bad

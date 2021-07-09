@@ -21,10 +21,13 @@ import java.util.Map;
 @Slf4j
 @RefreshScope
 public class ClusterConfig {
+    @Value("${update_player_status}")
+    public int update_player_status;
+
     @Value("${servers}")
     String serverList;
 
-    static public int curServerID;
+    public static int curServerID;
 
     static {
         curServerID = Integer.parseInt(System.getenv("bad_sid"));

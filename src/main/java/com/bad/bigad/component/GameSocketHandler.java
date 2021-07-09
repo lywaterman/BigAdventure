@@ -13,6 +13,8 @@ import org.redisson.api.RLock;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -25,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
+@RefreshScope
 public class GameSocketHandler extends TextWebSocketHandler {
     @Autowired
     PlayerService playerService;
@@ -40,6 +43,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     @Autowired
     ScriptManager scriptManager;
+
+    @Value("${player_status_ttl}")
+    public int player_status_ttl;
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
@@ -120,7 +126,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
                         player,
                         status);
 
-                map.put(id, status, 10, TimeUnit.SECONDS);
+                map.put(id, status, player_status_ttl, TimeUnit.SECONDS);
 
             } catch (Exception e) {
                 log.error(e.getMessage());
