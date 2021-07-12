@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bad.bigad.mapper.GameMapMapper">
+    <resultMap id="gameMap" type="com.bad.bigad.entity.game.GameMap">
+        <result column="id" property="id"/>
+        <result column="status" property="status"/>
+        <result column="grids" property="gridList"
+                typeHandler="com.bad.bigad.handlers.JsonTypeHandler" />
+    </resultMap>
+
+    <select id="getGameMapById" resultType="gameMap" parameterType="int">
+        SELECT id, status, grids from gamemap WHERE id = #{id}
+    </select>
+</mapper>

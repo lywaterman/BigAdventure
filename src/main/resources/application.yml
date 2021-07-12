@@ -13,7 +13,7 @@ spring:
 
 mybatis:
   mapper-locations: classpath*:mapper/*Mapper.xml
-  type-aliases-package: com.bad.bigad.entity
+  type-aliases-package: com.bad.bigad.entity, com.bad.bigad.entity.game
 
 server:
   port : 8080

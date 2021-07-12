@@ -5,3 +5,11 @@ create table player (
     wx_nick_name varchar(255) DEFAULT NULL,
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+drop table if exists gamemap;
+create table gamemap (
+    id int UNIQUE ,
+    status int,
+    grids json,
+    primary key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
