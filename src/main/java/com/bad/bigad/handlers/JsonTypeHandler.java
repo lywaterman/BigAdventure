@@ -5,7 +5,11 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
+import com.bad.bigad.entity.game.Grid;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.type.BaseTypeHandler;
@@ -38,7 +42,11 @@ public class JsonTypeHandler<T> extends BaseTypeHandler<T> {
             if(json == null || json.length() == 0) {
                 return null;
             }
-            return objectMapper.readValue(json, type);
+            ObjectReader reader = objectMapper.readerFor(new TypeReference<Map<String, Grid>>() {
+            });
+
+            return reader.readValue(json);
+            //return objectMapper.readValue(json, type);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,7 +78,5 @@ public class JsonTypeHandler<T> extends BaseTypeHandler<T> {
     @Override
     public void setNonNullParameter(PreparedStatement ps, int columnIndex, T parameter, JdbcType jdbcType) throws SQLException {
         ps.setString(columnIndex, toJsonString(parameter));
-
     }
-
 }

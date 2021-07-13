@@ -26,6 +26,6 @@ public class ConfigController {
 
     @RequestMapping("/testGameMap")
     public GameMap testGameMap() {
-        return gameMapService.getGameMapById(0);
+        return gameMapService.getGameMapById(1);
     }
 }

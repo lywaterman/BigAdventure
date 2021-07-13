@@ -4,11 +4,11 @@
     <resultMap id="gameMap" type="com.bad.bigad.entity.game.GameMap">
         <result column="id" property="id"/>
         <result column="status" property="status"/>
-        <result column="grids" property="gridList"
-                typeHandler="com.bad.bigad.handlers.JsonTypeHandler" />
+        <result column="grids" property="varGrid"
+                typeHandler="com.bad.bigad.handlers.JsonTypeHandler"/>
     </resultMap>
 
-    <select id="getGameMapById" resultType="gameMap" parameterType="int">
+    <select id="getGameMapById" resultMap="gameMap" parameterType="int">
         SELECT id, status, grids from gamemap WHERE id = #{id}
     </select>
 </mapper>

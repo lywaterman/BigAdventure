@@ -1,5 +1,6 @@
 var JSONfn = require('./jsonfn.js');
 var test = require('./test.js')
+var gameMap = require('./map.js')
 
 
 //function getA(a) {return a};
@@ -88,4 +89,8 @@ function onMessage(message, session, player) {
 
 function testReload(log) {
     test.test(log)
+}
+
+function getGameMapConfig(id) {
+    return gameMap.gamemaps[id]
 }
