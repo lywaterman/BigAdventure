@@ -1,5 +1,6 @@
 package com.bad.bigad.service.impl;
 
+import com.bad.bigad.entity.Player;
 import com.bad.bigad.entity.game.GameMap;
 import com.bad.bigad.entity.game.Grid;
 import com.bad.bigad.manager.ScriptManager;
@@ -7,6 +8,8 @@ import com.bad.bigad.mapper.GameMapMapper;
 import com.bad.bigad.service.game.GameMapService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.redisson.api.RMap;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,9 @@ public class GameMapServiceImp implements GameMapService {
 
     @Autowired
     private ScriptManager scriptManager;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     public boolean initFromScript(GameMap map) {
         ScriptObjectMirror gameMap = (ScriptObjectMirror) scriptManager.callJs(
@@ -56,9 +62,19 @@ public class GameMapServiceImp implements GameMapService {
 
     @Override
     public GameMap getGameMapById(int id) {
-        GameMap map = playerMapper.getGameMapById(id);
-        initFromScript(map);
-        return map;
+        RMap<Integer, GameMap> maps = redissonClient.getMap("gamemaps");
+
+        GameMap gameMap = maps.get(id);
+
+        if (gameMap == null) {
+            gameMap = playerMapper.getGameMapById(id);
+            initFromScript(gameMap);
+
+            maps.put(id, gameMap);
+
+        }
+
+        return gameMap;
     }
 
     @Override

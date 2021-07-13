@@ -94,3 +94,10 @@ function testReload(log) {
 function getGameMapConfig(id) {
     return gameMap.gamemaps[id]
 }
+
+function initGameMapManager(mapManager) {
+    var maps = [1, 2];
+    for (var id in maps) {
+        mapManager.getGameMap(id);
+    }
+}

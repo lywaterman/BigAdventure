@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Data
-public class GameMap {
+public class GameMap implements Serializable {
     private int id;
     private int status;
     private List<List<Grid>> gridList = new ArrayList<>();
