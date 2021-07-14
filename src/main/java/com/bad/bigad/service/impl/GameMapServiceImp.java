@@ -66,6 +66,14 @@ public class GameMapServiceImp implements GameMapService {
 
         if (gameMap == null) {
             gameMap = gameMapMapper.getGameMapById(id);
+
+            //db里面也没有,创建一个写db
+            if (gameMap == null) {
+                gameMap = new GameMap();
+                gameMap.setId(id);
+
+                gameMapMapper.updateGameMap(gameMap);
+            }
             initFromScript(gameMap);
 
             maps.put(id, gameMap);

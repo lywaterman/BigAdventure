@@ -1,6 +1,7 @@
 package com.bad.bigad.entity.game;
 
 import com.bad.bigad.manager.ScriptManager;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import lombok.Data;
@@ -14,7 +15,8 @@ import java.util.List;
 public class GameMap implements Serializable {
     private int id;
     private int status;
+    @JsonIgnore
     private List<List<Grid>> gridList = new ArrayList<>();
-    private HashMap<String, Grid> varGrid;
+    private HashMap<String, Grid> varGrid = new HashMap<>();
 
 }

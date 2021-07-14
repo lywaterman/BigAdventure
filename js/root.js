@@ -98,7 +98,7 @@ function getGameMapConfig(id) {
 //初始化两张地图
 function initGameMapManager(mapManager) {
     var maps = [1, 2];
-    for (var id in maps) {
-        mapManager.getGameMap(id);
-    }
+    maps.forEach(function (item,index) {
+        mapManager.getGameMap(item)
+    })
 }
