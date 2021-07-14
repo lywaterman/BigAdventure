@@ -1,6 +1,7 @@
 var JSONfn = require('./jsonfn.js');
 var test = require('./test.js')
 var gameMap = require('./map.js')
+var proto_handler = require('./proto_handler.js')
 
 
 //function getA(a) {return a};
@@ -83,7 +84,20 @@ function onMessage(message, session, player) {
     //jsb.sendMessage(session, "sb")
     //jsb.sendMessage(session, JSONfn.stringify(gezi01));
 
-    jsb.sendMessage(session, "你说啥我就说啥:"+message)
+    //jsb.sendMessage(session, "你说啥我就说啥:"+message)
+
+    var msg = null
+    try {
+        msg = JSON.parse(message);
+    } catch (err) {
+
+    }
+
+    if (msg != null && msg.id != null) {
+        proto_handler.onProtocol(msg, session, player)
+    } else {
+        jsb.sendMessage(session, "你说啥我就说啥:"+message)
+    }
 }
 
 

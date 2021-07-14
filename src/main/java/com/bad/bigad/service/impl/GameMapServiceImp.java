@@ -88,6 +88,7 @@ public class GameMapServiceImp implements GameMapService {
         return null;
     }
 
+    //更新cache和db
     @Override
     public void updateGameMap(GameMap gameMap) {
         RMap<Integer, GameMap> maps = redissonClient.getMap("gamemaps");
