@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+//地图要有id和temple id，
 @Data
 public class GameMap implements Serializable {
     private int id;

@@ -22,7 +22,16 @@ public enum Util {
         snowFlake = new SnowFlake(0, 1);
     }
 
+    private SnowFlake mapSnow;
+    {
+        mapSnow = new SnowFlake(9, 1);
+    }
+
     public long getSnowId() {
+        return snowFlake.nextId();
+    }
+
+    public long getMapSnowId() {
         return snowFlake.nextId();
     }
 

@@ -111,8 +111,9 @@ function getGameMapConfig(id) {
 
 //初始化两张地图
 function initGameMapManager(mapManager) {
+    //tempid
     var maps = [1, 2];
     maps.forEach(function (item,index) {
-        mapManager.getGameMap(item)
+        //mapManager.getGameMap(item)
     })
 }

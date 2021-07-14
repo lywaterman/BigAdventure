@@ -33,6 +33,10 @@ public class GameMapManager {
         return gameMap;
     }
 
+    public GameMap createGameMap(int tempId) {
+        return null;
+    }
+
     public boolean init() {
         //加载所有的地图进内存
         scriptManager.callJs("initGameMapManager", this);
