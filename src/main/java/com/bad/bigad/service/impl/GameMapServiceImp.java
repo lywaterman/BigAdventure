@@ -1,12 +1,10 @@
 package com.bad.bigad.service.impl;
 
-import com.bad.bigad.entity.Player;
 import com.bad.bigad.entity.game.GameMap;
 import com.bad.bigad.entity.game.Grid;
 import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.mapper.GameMapMapper;
 import com.bad.bigad.service.game.GameMapService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
@@ -22,7 +20,7 @@ import java.util.Map;
 public class GameMapServiceImp implements GameMapService {
 
     @Autowired
-    private GameMapMapper playerMapper;
+    private GameMapMapper gameMapMapper;
 
     @Autowired
     private ScriptManager scriptManager;
@@ -67,7 +65,7 @@ public class GameMapServiceImp implements GameMapService {
         GameMap gameMap = maps.get(id);
 
         if (gameMap == null) {
-            gameMap = playerMapper.getGameMapById(id);
+            gameMap = gameMapMapper.getGameMapById(id);
             initFromScript(gameMap);
 
             maps.put(id, gameMap);
@@ -80,5 +78,13 @@ public class GameMapServiceImp implements GameMapService {
     @Override
     public List<GameMap> getAllGameMap() {
         return null;
+    }
+
+    @Override
+    public void updateGameMap(GameMap gameMap) {
+        RMap<Integer, GameMap> maps = redissonClient.getMap("gamemaps");
+        maps.put(gameMap.getId(),gameMap);
+
+        gameMapMapper.updateGameMap(gameMap);
     }
 }

@@ -31,6 +31,16 @@ public class ConfigController {
     @RequestMapping("/testGameMap")
     public GameMap testGameMap() {
         gameMapManager.init();
-        return gameMapManager.getGameMap(1);
+        GameMap gameMap = gameMapManager.getGameMap(1);
+
+        return gameMap;
+    }
+
+    @RequestMapping("/updateGameMap")
+    public int updateGameMap() {
+        GameMap gameMap = gameMapManager.getGameMap(1);
+        gameMap.setStatus(101);
+        gameMapService.updateGameMap(gameMap);
+        return 1;
     }
 }

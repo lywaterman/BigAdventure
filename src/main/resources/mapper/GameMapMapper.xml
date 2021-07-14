@@ -11,4 +11,9 @@
     <select id="getGameMapById" resultMap="gameMap" parameterType="int">
         SELECT id, status, grids from gamemap WHERE id = #{id}
     </select>
+
+    <insert id="updateGameMap" parameterType="com.bad.bigad.entity.game.GameMap">
+        INSERT INTO gamemap (id, status, grids) VALUES(#{id}, #{status}, #{varGrid, typeHandler=com.bad.bigad.handlers.JsonTypeHandler})
+        ON DUPLICATE KEY UPDATE status = #{status}, grids = #{varGrid, typeHandler=com.bad.bigad.handlers.JsonTypeHandler};
+    </insert>
 </mapper>

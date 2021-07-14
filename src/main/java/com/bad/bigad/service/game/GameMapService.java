@@ -8,4 +8,5 @@ import java.util.List;
 public interface GameMapService {
     public GameMap getGameMapById(int id);
     public List<GameMap> getAllGameMap();
+    public void updateGameMap(GameMap gameMap);
 }

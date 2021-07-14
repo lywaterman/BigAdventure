@@ -9,4 +9,5 @@ import java.util.List;
 public interface GameMapMapper {
     public GameMap getGameMapById(int id);
     public List<GameMap> getAllGameMap();
+    public void updateGameMap(GameMap gameMap);
 }

@@ -10,6 +10,7 @@ import java.util.Map;
 import com.bad.bigad.entity.game.Grid;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.type.BaseTypeHandler;
@@ -54,7 +55,9 @@ public class JsonTypeHandler<T> extends BaseTypeHandler<T> {
 
     private String toJsonString(Object obj) {
         try {
-            return objectMapper.writeValueAsString(obj);
+            ObjectWriter writer = objectMapper.writerFor(new TypeReference<Map<String, Grid>>() {
+            });
+            return writer.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
