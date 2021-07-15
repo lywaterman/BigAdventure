@@ -127,6 +127,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
                         status);
 
                 map.put(id, status, player_status_ttl, TimeUnit.SECONDS);
+                PlayerManager.instance.link(session, player);
 
             } catch (Exception e) {
                 log.error(e.getMessage());
@@ -155,8 +156,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
         );
 
         if (removed) {
-            //给玩家下线
+            //给玩家下线, (有些情况也不会下线, 会由机器人托管)
             Player player = PlayerManager.instance.remove(id);
+            PlayerManager.instance.unlink(session, player);
         }
     }
 

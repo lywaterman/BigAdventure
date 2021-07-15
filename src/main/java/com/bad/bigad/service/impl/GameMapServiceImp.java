@@ -47,13 +47,13 @@ public class GameMapServiceImp implements GameMapService {
 
         Iterator iterator = map.getVarGrid().entrySet().iterator();
         while(iterator.hasNext()) {
-            Map.Entry mentry = (Map.Entry)iterator.next();
+            Map.Entry entry = (Map.Entry)iterator.next();
 
-            String[] pos = mentry.getKey().toString().split("|");
+            String[] pos = entry.getKey().toString().split("|");
             int posX = Integer.parseInt(pos[0]);
             int posY = Integer.parseInt(pos[2]);
 
-            map.getGridList().get(posX).add(posY,(Grid) mentry.getValue());
+            map.getGridList().get(posX).add(posY,(Grid) entry.getValue());
         }
 
         return true;
