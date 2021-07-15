@@ -5,6 +5,7 @@ import com.bad.bigad.entity.game.Grid;
 import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.mapper.GameMapMapper;
 import com.bad.bigad.service.game.GameMapService;
+import com.bad.bigad.util.Util;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
@@ -31,7 +32,7 @@ public class GameMapServiceImp implements GameMapService {
     public boolean initFromScript(GameMap map) {
         ScriptObjectMirror gameMap = (ScriptObjectMirror) scriptManager.callJs(
                 "getGameMapConfig",
-                map.getId());
+                map.getTempId());
 
         int x = (int)gameMap.get("x");
         int y = (int)gameMap.get("y");
@@ -59,29 +60,32 @@ public class GameMapServiceImp implements GameMapService {
     }
 
     @Override
-    public GameMap getGameMapById(int id) {
-        RMap<Integer, GameMap> maps = redissonClient.getMap("gamemaps");
-
+    public GameMap getGameMapById(long id) {
+        RMap<Long, GameMap> maps = redissonClient.getMap("gamemaps");
         GameMap gameMap = maps.get(id);
 
-        if (gameMap == null) {
-            gameMap = gameMapMapper.getGameMapById(id);
-
-            //db里面也没有,创建一个写db
-            if (gameMap == null) {
-                gameMap = new GameMap();
-                gameMap.setId(id);
-
-                gameMapMapper.updateGameMap(gameMap);
-            }
-            initFromScript(gameMap);
-
-            maps.put(id, gameMap);
-
-        }
+        //cache没有，取db找
+        gameMap = gameMapMapper.getGameMapById(id);
 
         return gameMap;
     }
+
+    @Override
+    public GameMap createGameMap(int tempId) {
+        RMap<Long, GameMap> maps = redissonClient.getMap("gamemaps");
+
+        GameMap gameMap = new GameMap(tempId);
+        gameMap.setId(Util.instance.getMapSnowId());
+        initFromScript(gameMap);
+
+        //先写db
+        gameMapMapper.newGameMap(gameMap);
+        //序列化，放入cache
+        maps.put(gameMap.getId(), gameMap);
+
+        return gameMap;
+    }
+
 
     @Override
     public List<GameMap> getAllGameMap() {
@@ -91,7 +95,7 @@ public class GameMapServiceImp implements GameMapService {
     //更新cache和db
     @Override
     public void updateGameMap(GameMap gameMap) {
-        RMap<Integer, GameMap> maps = redissonClient.getMap("gamemaps");
+        RMap<Long, GameMap> maps = redissonClient.getMap("gamemaps");
         maps.put(gameMap.getId(),gameMap);
 
         gameMapMapper.updateGameMap(gameMap);

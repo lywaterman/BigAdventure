@@ -14,10 +14,14 @@ import java.util.List;
 //地图要有id和temple id，
 @Data
 public class GameMap implements Serializable {
-    private int id;
+    private long id;
     private int status;
+    private int tempId;
     @JsonIgnore
     private List<List<Grid>> gridList = new ArrayList<>();
     private HashMap<String, Grid> varGrid = new HashMap<>();
 
+    public GameMap(int tempId) {
+        this.tempId = tempId;
+    }
 }

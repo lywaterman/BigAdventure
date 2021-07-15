@@ -7,7 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface GameMapMapper {
-    public GameMap getGameMapById(int id);
+    public GameMap getGameMapById(long id);
     public List<GameMap> getAllGameMap();
     public void updateGameMap(GameMap gameMap);
+    public void newGameMap(GameMap gameMap);
 }

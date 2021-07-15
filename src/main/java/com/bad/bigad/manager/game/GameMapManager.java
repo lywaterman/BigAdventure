@@ -18,23 +18,24 @@ public class GameMapManager {
     @Autowired
     GameMapService gameMapService;
 
-    private ConcurrentHashMap<Integer, GameMap> gameMaps;
+    private ConcurrentHashMap<Long, GameMap> gameMaps;
     {
-        gameMaps = new ConcurrentHashMap<Integer, GameMap>();
+        gameMaps = new ConcurrentHashMap<Long, GameMap>();
     }
 
-    public GameMap getGameMap(int id) {
+    public GameMap getGameMap(long id) {
+        //内存没有交给service去找
         GameMap gameMap = gameMaps.get(id);
         if (gameMap == null) {
-            gameMap =  gameMapService.getGameMapById(id);
-            gameMaps.put(id, gameMap);
+            gameMapService.getGameMapById(id);
         }
 
         return gameMap;
     }
 
-    public GameMap createGameMap(int tempId) {
-        return null;
+    public GameMap newGameMap(int tempId) {
+        GameMap gameMap = gameMapService.createGameMap(tempId);
+        return gameMap;
     }
 
     public boolean init() {

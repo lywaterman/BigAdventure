@@ -9,7 +9,7 @@ create table player (
 drop table if exists gamemap;
 create table gamemap (
     id bigint UNIQUE,
-    tempid int,
+    temp_id int,
     status int,
     grids json,
     primary key (id)

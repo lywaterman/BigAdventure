@@ -3,17 +3,22 @@
 <mapper namespace="com.bad.bigad.mapper.GameMapMapper">
     <resultMap id="gameMap" type="com.bad.bigad.entity.game.GameMap">
         <result column="id" property="id"/>
+        <result column="temp_id" property="tempId"/>
         <result column="status" property="status"/>
         <result column="grids" property="varGrid"
                 typeHandler="com.bad.bigad.handlers.JsonTypeHandler"/>
     </resultMap>
 
-    <select id="getGameMapById" resultMap="gameMap" parameterType="int">
-        SELECT id, status, grids from gamemap WHERE id = #{id}
+    <select id="getGameMapById" resultMap="gameMap" parameterType="long">
+        SELECT id, status, temp_id, grids from gamemap WHERE id = #{id}
     </select>
 
     <insert id="updateGameMap" parameterType="com.bad.bigad.entity.game.GameMap">
-        INSERT INTO gamemap (id, status, grids) VALUES(#{id}, #{status}, #{varGrid, typeHandler=com.bad.bigad.handlers.JsonTypeHandler})
+        INSERT INTO gamemap (id, temp_id, status, grids) VALUES(#{id}, #{tempId}, #{status}, #{varGrid, typeHandler=com.bad.bigad.handlers.JsonTypeHandler})
         ON DUPLICATE KEY UPDATE status = #{status}, grids = #{varGrid, typeHandler=com.bad.bigad.handlers.JsonTypeHandler};
+    </insert>
+
+    <insert id="newGameMap" parameterType="com.bad.bigad.entity.game.GameMap">
+        INSERT INTO gamemap (id, temp_id, status, grids) VALUES(#{id}, #{tempId}, #{status}, #{varGrid, typeHandler=com.bad.bigad.handlers.JsonTypeHandler});
     </insert>
 </mapper>
