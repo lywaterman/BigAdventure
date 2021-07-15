@@ -2,6 +2,7 @@ package com.bad.bigad.manager;
 
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.model.PlayerOnlineStatus;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,6 +17,12 @@ public enum PlayerManager {
     private ConcurrentHashMap<Long, PlayerOnlineStatus> status_map;
     {
         status_map = new ConcurrentHashMap<>();
+    }
+
+    //Session Link Player
+    private ConcurrentHashMap<WebSocketSession, Player> playerSessionLink;
+    {
+        playerSessionLink = new ConcurrentHashMap<>();
     }
 
 

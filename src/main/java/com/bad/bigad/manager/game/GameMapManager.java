@@ -33,6 +33,7 @@ public class GameMapManager {
         return gameMap;
     }
 
+    //创建地图按照模板
     public GameMap newGameMap(int tempId) {
         GameMap gameMap = gameMapService.createGameMap(tempId);
         return gameMap;

@@ -79,8 +79,8 @@ function onLoginout(session, player) {
     jsb.sendMessage(session, "goodbye, "+player.getWx_name())
 }
 
-//game socket 收到消息
-function onMessage(message, session, player) {
+//game socket 收到消息, 玩家必然在一个房间里面
+function onMessage(message, session, player, gameRoom) {
     //jsb.sendMessage(session, "sb")
     //jsb.sendMessage(session, JSONfn.stringify(gezi01));
 
@@ -94,7 +94,7 @@ function onMessage(message, session, player) {
     }
 
     if (msg != null && msg.id != null) {
-        proto_handler.onProtocol(msg, session, player)
+        proto_handler.onProtocol(msg, session, player, gameRoom)
     } else {
         jsb.sendMessage(session, "你说啥我就说啥:"+message)
     }
