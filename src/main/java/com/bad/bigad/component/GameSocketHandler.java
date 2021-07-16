@@ -10,6 +10,7 @@ import com.bad.bigad.service.PlayerService;
 import com.bad.bigad.util.BridgeForJs;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
+import org.redisson.api.RMap;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +80,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
             session.sendMessage(new TextMessage("登陆成功"));
         }
 
-        RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
+        //RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
+        RMap<Long, PlayerOnlineStatus> map = redissonClient.getMap("online_status");
+
         RLock lock = redissonClient.getLock(strId);
 
         if (lock.tryLock()) {
@@ -126,7 +129,8 @@ public class GameSocketHandler extends TextWebSocketHandler {
                         player,
                         status);
 
-                map.put(id, status, player_status_ttl, TimeUnit.SECONDS);
+                map.put(id, status);
+                map.expire(player_status_ttl, TimeUnit.SECONDS);
 
             } catch (Exception e) {
                 log.error(e.getMessage());
