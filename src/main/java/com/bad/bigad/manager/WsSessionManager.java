@@ -1,6 +1,7 @@
 package com.bad.bigad.manager;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -8,9 +9,8 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public enum WsSessionManager {
-    instance;
-
+@Component
+public class WsSessionManager {
     private ConcurrentHashMap<Long, WebSocketSession> sessionPool;
     {
         sessionPool = new ConcurrentHashMap<>();

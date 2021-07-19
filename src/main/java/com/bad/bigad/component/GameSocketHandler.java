@@ -45,6 +45,12 @@ public class GameSocketHandler extends TextWebSocketHandler {
     @Autowired
     ScriptManager scriptManager;
 
+    @Autowired
+    PlayerManager playerManager;
+
+    @Autowired
+    WsSessionManager wsSessionManager;
+
     @Value("${player_status_ttl}")
     public int player_status_ttl;
 
@@ -53,7 +59,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
         String strId = (String) session.getAttributes().get("id");
         Long id = Long.parseLong(strId);
 
-        Player player = PlayerManager.instance.get(id);
+        Player player = playerManager.get(id);
 
         scriptManager.callJs("onMessage", message.getPayload(), session, player);
     }
@@ -120,13 +126,13 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 }
 
                 //在本服务器上线
-                WsSessionManager.instance.add(
+                wsSessionManager.add(
                         id,
                         session);
                 player.setSession(session);
 
                 PlayerOnlineStatus status = new PlayerOnlineStatus(ClusterConfig.curServerID);
-                PlayerManager.instance.add(
+                playerManager.add(
                         id,
                         player,
                         status);
@@ -155,14 +161,14 @@ public class GameSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Long id = Long.parseLong((String) session.getAttributes().get("id"));
 
-        boolean removed = WsSessionManager.instance.remove(
+        boolean removed = wsSessionManager.remove(
                 id,
                 session
         );
 
         if (removed) {
             //给玩家下线, (有些情况也不会下线, 会由机器人托管)
-            Player player = PlayerManager.instance.remove(id);
+            Player player = playerManager.remove(id);
             //PlayerManager.instance.unlink(session, player);
         }
     }

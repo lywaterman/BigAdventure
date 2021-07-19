@@ -27,6 +27,9 @@ public class UpdatePlayerOnline implements ApplicationListener<RefreshScopeRefre
     @Autowired
     DiscoveryClient discoveryClient;
 
+    @Autowired
+    PlayerManager playerManager;
+
     @Value("${player_status_ttl}")
     public int player_status_ttl;
 
@@ -38,7 +41,7 @@ public class UpdatePlayerOnline implements ApplicationListener<RefreshScopeRefre
         //RMapCache<Long, Object> map = redissonClient.getMapCache("online_status");
         RMap<Long, Object> map = redissonClient.getMap("online_status");
         map.clear();
-        map.putAll(PlayerManager.instance.getStatusMap());
+        map.putAll(playerManager.getStatusMap());
 
         //更新完数据再设置超时
         map.expire(player_status_ttl, TimeUnit.SECONDS);

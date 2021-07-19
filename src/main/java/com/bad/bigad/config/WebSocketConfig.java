@@ -49,6 +49,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
     GameSocketHandler gameSocketHandler;
 
     @Autowired
+    WsSessionManager wsSessionManager;
+
+    @Autowired
     ChatService chatService;
 
     private final MessageChannel outChannel;
@@ -117,7 +120,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
                         String username = session.getPrincipal().getName();
                         Long id = Long.parseLong(username);
 
-                        WebSocketSession curSession = WsSessionManager.instance.getChatSession(id);
+                        WebSocketSession curSession = wsSessionManager.getChatSession(id);
 
                         if (curSession != null) {
 //                            ChatMessage msg = new ChatMessage();
@@ -127,10 +130,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 //                            msg.setType(ChatMessage.MessageType.ANOTHER);
 //                            msg.setContent("您在其他地方登陆了");
 //                            chatService.sendMsg(msg);
-                            WsSessionManager.instance.removeAddCloseChatSession(id);
+                            wsSessionManager.removeAddCloseChatSession(id);
                         }
 
-                        WsSessionManager.instance.addChatSession(id, session);
+                        wsSessionManager.addChatSession(id, session);
 
                     }
 
@@ -140,7 +143,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
                         String username = session.getPrincipal().getName();
                         Long id = Long.parseLong(username);
 
-                        WsSessionManager.instance.removeChatSession(id, session);
+                        wsSessionManager.removeChatSession(id, session);
                     }
                 };
             }

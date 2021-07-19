@@ -2,13 +2,13 @@ package com.bad.bigad.manager;
 
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.model.PlayerOnlineStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public enum PlayerManager {
-    instance;
-
+@Component
+public class PlayerManager {
     private ConcurrentHashMap<Long, Player> players;
     {
         players = new ConcurrentHashMap<>();

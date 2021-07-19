@@ -24,6 +24,9 @@ public class PlayerServiceImp implements PlayerService {
     @Autowired
     private RedissonClient redissonClient;
 
+    @Autowired
+    WsSessionManager wsSessionManager;
+
     @Override
     public Player findById(long id) {
         return playerMapper.findById(id);
@@ -52,9 +55,9 @@ public class PlayerServiceImp implements PlayerService {
 
     @Override
     public  boolean kickPlayer(Long id, String message) {
-        WsSessionManager.instance.sendMessage(id, message);
+        wsSessionManager.sendMessage(id, message);
 
-        WsSessionManager.instance.close(id);
+        wsSessionManager.close(id);
 
         return true;
     }
