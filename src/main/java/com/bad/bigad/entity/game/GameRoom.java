@@ -17,7 +17,7 @@ public class GameRoom extends Room implements Serializable {
     protected long mapId;
     transient protected GameMap curMap;
 
-    public GameRoom(int mapId, int roomType) {
+    public GameRoom(long mapId, int roomType) {
         this.mapId = mapId;
         this.roomType = roomType;
     }

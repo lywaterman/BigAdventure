@@ -5,6 +5,7 @@ import com.bad.bigad.entity.game.GameMap;
 import com.bad.bigad.entity.game.GameRoom;
 import com.bad.bigad.manager.game.GameMapManager;
 import com.bad.bigad.service.game.GameMapService;
+import com.bad.bigad.service.game.GameRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,9 @@ public class ConfigController {
     GameMapService gameMapService;
 
     @Autowired
+    GameRoomService gameRoomService;
+
+    @Autowired
     GameMapManager gameMapManager;
 
     @RequestMapping("/config")
@@ -32,7 +36,15 @@ public class ConfigController {
 
     @RequestMapping("/testGameRoom")
     public GameRoom testGameRoom(@RequestParam int id) {
-        return null;
+        GameMap gameMap = gameMapService.newGameMap(1);
+
+        GameRoom gameRoom = new GameRoom(gameMap.getId(), 1);
+        gameRoom.setId(id);
+
+        gameRoomService.updateGameRoom(gameRoom);
+
+        gameRoom = gameRoomService.getGameRoomById(id);
+        return gameRoom;
     }
 
     @RequestMapping("/testGameMap")

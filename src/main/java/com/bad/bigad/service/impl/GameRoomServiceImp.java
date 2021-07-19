@@ -9,9 +9,12 @@ import com.bad.bigad.util.Util;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class GameRoomServiceImp implements GameRoomService {
     @Autowired
     RedissonClient redissonClient;
@@ -53,7 +56,7 @@ public class GameRoomServiceImp implements GameRoomService {
         return gameRoom;
     }
     @Override
-    public GameRoom newGameRoom(int mapId, int roomType) {
+    public GameRoom newGameRoom(long mapId, int roomType) {
         RMap<Long, GameRoom> maps = redissonClient.getMap("gamerooms");
 
         GameRoom gameRoom = new GameRoom(mapId, roomType);

@@ -1,6 +1,7 @@
 package com.bad.bigad.game;
 
 import com.bad.bigad.entity.Player;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -12,6 +13,7 @@ public class Room {
     protected long id;
     protected int roomType;
     //玩家列表
+    @JsonIgnore
     transient protected Map<Long, Player> playerList = new ConcurrentHashMap<>();
 
     public void onEnter(Player player) {
