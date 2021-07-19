@@ -24,19 +24,13 @@ public class GameMapManager {
     }
 
     public GameMap getGameMap(long id) {
-        //内存没有交给service去找
         GameMap gameMap = gameMaps.get(id);
-        if (gameMap == null) {
-            gameMapService.getGameMapById(id);
-        }
 
         return gameMap;
     }
 
-    //创建地图按照模板
-    public GameMap newGameMap(int tempId) {
-        GameMap gameMap = gameMapService.createGameMap(tempId);
-        return gameMap;
+    public void putGameMap(GameMap gameMap) {
+        gameMaps.put(gameMap.getId(), gameMap);
     }
 
     public boolean init() {

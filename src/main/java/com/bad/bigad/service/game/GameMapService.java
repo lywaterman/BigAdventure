@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GameMapService {
     public GameMap getGameMapById(long id);
-    public GameMap createGameMap(int tempId);
+    public GameMap newGameMap(int tempId);
     public List<GameMap> getAllGameMap();
     public void updateGameMap(GameMap gameMap);
 }

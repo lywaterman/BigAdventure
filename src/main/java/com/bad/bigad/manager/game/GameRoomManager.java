@@ -19,4 +19,12 @@ public class GameRoomManager {
         //初始化房间放这里
 
     }
+
+    public GameRoom getRoom(long id) {
+        return gameRoomMap.get(id);
+    }
+
+    public void putRoom(GameRoom gameRoom) {
+        gameRoomMap.put(gameRoom.getId(), gameRoom);
+    }
 }

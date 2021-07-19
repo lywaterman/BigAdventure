@@ -2,7 +2,6 @@ package com.bad.bigad.controller;
 
 import com.bad.bigad.config.RabbitmqConfig;
 import com.bad.bigad.entity.Player;
-import com.bad.bigad.manager.PlayerManager;
 import com.bad.bigad.service.PlayerService;
 import com.bad.bigad.util.Util;
 import io.jsonwebtoken.*;
@@ -15,21 +14,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.DatatypeConverter;
-import java.math.BigInteger;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 
 @Data
@@ -170,7 +165,7 @@ public class LoginController {
                 }
 
                 if (player == null) {
-                    player = playerService.CreateNew(param.getWx_name(), param.getWx_nick_name());
+                    player = playerService.newPlayer(param.getWx_name(), param.getWx_nick_name());
                     if (player != null) {
                         players.put(player.getId(), player);
                         wxToId.put(player.getWx_name(), player.getId());

@@ -4,7 +4,7 @@ import com.bad.bigad.entity.game.GameRoom;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LobbyRoom extends GameRoom
+public class LobbyRoom extends Room
 {
 
 }

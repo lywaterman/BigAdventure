@@ -16,4 +16,9 @@ public class GameRoom extends Room implements Serializable {
     //当前的map
     protected long mapId;
     transient protected GameMap curMap;
+
+    public GameRoom(int mapId, int roomType) {
+        this.mapId = mapId;
+        this.roomType = roomType;
+    }
 }

@@ -35,7 +35,7 @@ public class PlayerServiceImp implements PlayerService {
     }
 
     @Override
-    public Player CreateNew(String wx_name, String wx_nick_name) {
+    public Player newPlayer(String wx_name, String wx_nick_name) {
         Player p = new Player();
         p.setId(Util.instance.getSnowId());
         p.setWx_name(wx_name);

@@ -27,11 +27,20 @@ public enum Util {
         mapSnow = new SnowFlake(9, 1);
     }
 
+    private SnowFlake roomSnow;
+    {
+        roomSnow = new SnowFlake(9,2);
+    }
+
     public long getSnowId() {
         return snowFlake.nextId();
     }
 
     public long getMapSnowId() {
+        return snowFlake.nextId();
+    }
+
+    public long getRoomSnowId() {
         return snowFlake.nextId();
     }
 
