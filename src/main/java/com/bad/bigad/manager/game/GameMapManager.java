@@ -32,10 +32,4 @@ public class GameMapManager {
     public void putGameMap(GameMap gameMap) {
         gameMaps.put(gameMap.getId(), gameMap);
     }
-
-    public boolean init() {
-        //加载所有的地图进内存
-        scriptManager.callJs("initGameMapManager", this);
-        return true;
-    }
 }

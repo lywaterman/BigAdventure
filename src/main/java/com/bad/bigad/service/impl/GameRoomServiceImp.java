@@ -1,6 +1,8 @@
 package com.bad.bigad.service.impl;
 
+import com.bad.bigad.entity.game.GameMap;
 import com.bad.bigad.entity.game.GameRoom;
+import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.game.GameRoomManager;
 import com.bad.bigad.mapper.GameRoomMapper;
 import com.bad.bigad.service.game.GameMapService;
@@ -27,6 +29,9 @@ public class GameRoomServiceImp implements GameRoomService {
 
     @Autowired
     GameRoomManager gameRoomManager;
+
+    @Autowired
+    ScriptManager scriptManager;
 
     @Override
     public GameRoom getGameRoomById(long id) {
@@ -56,17 +61,22 @@ public class GameRoomServiceImp implements GameRoomService {
         return gameRoom;
     }
     @Override
-    public GameRoom newGameRoom(long mapId, int roomType) {
-        RMap<Long, GameRoom> maps = redissonClient.getMap("gamerooms");
+    public GameRoom newGameRoom(long id, int mapTempId, int roomType) {
+        RMap<Long, GameRoom> gamerooms = redissonClient.getMap("gamerooms");
 
-        GameRoom gameRoom = new GameRoom(mapId, roomType);
-        gameRoom.setId(Util.instance.getRoomSnowId());
+        GameMap gameMap = gameMapService.newGameMap(mapTempId);
+        GameRoom gameRoom = new GameRoom(gameMap.getId(), roomType);
 
-        //先写db
-        gameRoomMapper.newGameRoom(gameRoom);
+        if (id == 0) {
+            gameRoom.setId(Util.instance.getRoomSnowId());
+            gameRoomMapper.newGameRoom(gameRoom);
+        } else {
+            gameRoom.setId(id);
+            gameRoomMapper.updateGameRoom(gameRoom);
+        }
+
         //序列化，放入cache
-        maps.put(gameRoom.getId(), gameRoom);
-
+        gamerooms.put(gameRoom.getId(), gameRoom);
         gameRoomManager.putRoom(gameRoom);
 
         return gameRoom;
@@ -85,5 +95,10 @@ public class GameRoomServiceImp implements GameRoomService {
         maps.put(gameRoom.getId(),gameRoom);
 
         gameRoomMapper.updateGameRoom(gameRoom);
+    }
+
+    @Override
+    public void init() {
+        scriptManager.callJs("initGameRoomService");
     }
 }

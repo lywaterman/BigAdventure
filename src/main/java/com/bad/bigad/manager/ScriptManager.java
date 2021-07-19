@@ -1,5 +1,6 @@
 package com.bad.bigad.manager;
 
+import com.bad.bigad.service.game.GameRoomService;
 import com.bad.bigad.util.BridgeForJs;
 import com.coveo.nashorn_modules.FilesystemFolder;
 import com.coveo.nashorn_modules.Require;
@@ -8,6 +9,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -23,6 +25,9 @@ import java.nio.file.Path;
 @Slf4j
 @Component
 public class ScriptManager {
+    @Autowired
+    private GameRoomService gameRoomService;
+
     private File rootFile;
     public ScriptEngine scriptEngine;
     FilesystemFolder rootFolder;
@@ -46,6 +51,7 @@ public class ScriptManager {
         try {
             Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
             scriptEngine.put("jsb", BridgeForJs.instance);
+            scriptEngine.put("gameRoomService", gameRoomService);
             scriptEngine.eval(Files.newBufferedReader(rootFile.toPath()));
         } catch (ScriptException e) {
             e.printStackTrace();
@@ -84,6 +90,7 @@ public class ScriptManager {
         //赋予common.js的require能力
         Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
         scriptEngine.put("jsb", BridgeForJs.instance);
+        scriptEngine.put("gameRoomService", gameRoomService);
 
         //得到root.js
         //File rootFile = ResourceUtils.getFile("classpath:js/root.js");
