@@ -12,5 +12,6 @@ create table gamemap (
     temp_id int,
     status int,
     grids json,
+    create_time datetime default now(),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

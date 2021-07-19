@@ -17,8 +17,10 @@ public class GameMap implements Serializable {
     private long id;
     private int status;
     private int tempId;
+    //这个不用存db，也不用存cache
     @JsonIgnore
-    private List<List<Grid>> gridList = new ArrayList<>();
+    transient private List<List<Grid>> gridList = new ArrayList<>();
+
     private HashMap<String, Grid> varGrid = new HashMap<>();
 
     public GameMap(int tempId) {

@@ -67,6 +67,10 @@ public class GameMapServiceImp implements GameMapService {
         //cache没有，取db找
         gameMap = gameMapMapper.getGameMapById(id);
 
+        if (gameMap != null) {
+            initFromScript(gameMap);
+        }
+
         return gameMap;
     }
 
