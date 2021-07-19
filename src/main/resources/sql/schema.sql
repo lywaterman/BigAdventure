@@ -15,3 +15,12 @@ create table gamemap (
     create_time datetime default now(),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+drop table if exists gameroom;
+create table gameroom (
+    id bigint UNIQUE,
+    map_id bigint,
+    room_type int,
+    map_refresh_time datetime,
+    primary key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

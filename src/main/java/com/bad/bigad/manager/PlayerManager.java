@@ -20,18 +20,18 @@ public enum PlayerManager {
     }
 
     //Session Link Player
-    private ConcurrentHashMap<WebSocketSession, Player> playerSessionLink;
-    {
-        playerSessionLink = new ConcurrentHashMap<>();
-    }
-
-    public void link(WebSocketSession session, Player player) {
-        playerSessionLink.put(session, player);
-    }
-
-    public void unlink(WebSocketSession session, Player player) {
-        playerSessionLink.remove(session, player);
-    }
+//    private ConcurrentHashMap<Player, WebSocketSession> playerSessionLink;
+//    {
+//        playerSessionLink = new ConcurrentHashMap<>();
+//    }
+//
+//    public void link(WebSocketSession session, Player player) {
+//        playerSessionLink.put(player, session);
+//    }
+//
+//    public void unlink(WebSocketSession session, Player player) {
+//        playerSessionLink.remove(player, session);
+//    }
 
 
     public ConcurrentHashMap<Long, PlayerOnlineStatus> getStatusMap() {

@@ -123,15 +123,16 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 WsSessionManager.instance.add(
                         id,
                         session);
+                player.setSession(session);
+
                 PlayerOnlineStatus status = new PlayerOnlineStatus(ClusterConfig.curServerID);
                 PlayerManager.instance.add(
                         id,
                         player,
                         status);
-
                 map.put(id, status);
                 map.expire(player_status_ttl, TimeUnit.SECONDS);
-                PlayerManager.instance.link(session, player);
+               // PlayerManager.instance.link(session, player);
 
             } catch (Exception e) {
                 log.error(e.getMessage());
@@ -162,7 +163,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
         if (removed) {
             //给玩家下线, (有些情况也不会下线, 会由机器人托管)
             Player player = PlayerManager.instance.remove(id);
-            PlayerManager.instance.unlink(session, player);
+            //PlayerManager.instance.unlink(session, player);
         }
     }
 

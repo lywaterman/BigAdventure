@@ -1,7 +1,10 @@
 package com.bad.bigad.entity;
 
+import com.bad.bigad.game.Room;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.Serializable;
 
@@ -23,4 +26,10 @@ public class Player implements Serializable {
         }
         return idStr;
     }
+
+    @JsonIgnore
+    transient private Room room;
+
+    @JsonIgnore
+    transient private WebSocketSession session;
 }
