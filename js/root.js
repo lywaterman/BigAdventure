@@ -79,16 +79,16 @@ function onLoginout(player) {
     jsb.sendMessage(player, "goodbye, "+player.getWx_name())
 }
 
-function onEnter(player, roomid) {
-    jsb.sendMessage(player, "欢迎来到"+roomid+"房间")
+function onEnter(player, room) {
+    jsb.sendMessage(player, "欢迎来到"+room.getId()+"房间")
 }
 
-function onLeave(player, roomid) {
-    jsb.sendMessage(player, "欢迎下次再来"+roomid+"房间")
+function onLeave(player, room) {
+    room.broadcastMessageExcept(player.getWx_name()+"离开了房间", player)
 }
 
 //game socket 收到消息, 玩家必然在一个房间里面
-function onMessage(message, player, roomid) {
+function onMessage(message, player, room) {
     //jsb.sendMessage(session, "sb")
     //jsb.sendMessage(session, JSONfn.stringify(gezi01));
 
@@ -102,7 +102,7 @@ function onMessage(message, player, roomid) {
     }
 
     if (msg != null && msg.id != null) {
-        proto_handler.onProtocol(msg, player, roomid)
+        proto_handler.onProtocol(msg, player, room)
     } else {
         jsb.sendMessage(player, "你说啥我就说啥:"+message)
     }

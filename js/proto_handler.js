@@ -14,7 +14,7 @@ var protocol_handlers = {
 
 protocol_handlers[111] = onOpenGrid
 
-function onProtocol(msg, player, roomid) {
+function onProtocol(msg, player, room) {
     var handler = protocol_handlers[msg.id]
 
     if (handler) {
