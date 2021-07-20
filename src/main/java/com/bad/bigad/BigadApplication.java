@@ -1,10 +1,13 @@
 package com.bad.bigad;
 
+import com.bad.bigad.service.game.GameRoomService;
 import com.coveo.nashorn_modules.FilesystemFolder;
 import com.coveo.nashorn_modules.Folder;
 import com.coveo.nashorn_modules.Require;
 import com.coveo.nashorn_modules.ResourceFolder;
 import jdk.nashorn.api.scripting.NashornScriptEngine;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -13,6 +16,9 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.ResourceUtils;
@@ -89,6 +95,7 @@ import java.util.concurrent.Executors;
 //    }
 //}
 
+@Slf4j
 @EnableScheduling
 @SpringBootApplication
 @EnableFeignClients
@@ -99,8 +106,8 @@ public class BigadApplication {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
     public static void main(String[] args) {
         SpringApplication.run(BigadApplication.class, args);
     }
-
 }
