@@ -71,16 +71,24 @@ var chat_another_login = JSON.stringify({
 })
 
 //玩家登陆成功事件
-function onLogin(session, player) {
-    jsb.sendMessage(session, "你好, "+player.getWx_name())
+function onLogin(player) {
+    jsb.sendMessage(player, "你好, "+player.getWx_name())
 }
 
-function onLoginout(session, player) {
-    jsb.sendMessage(session, "goodbye, "+player.getWx_name())
+function onLoginout(player) {
+    jsb.sendMessage(player, "goodbye, "+player.getWx_name())
+}
+
+function onEnter(player, roomid) {
+    jsb.sendMessage(player, "欢迎来到"+roomid+"房间")
+}
+
+function onLeave(player, roomid) {
+    jsb.sendMessage(player, "欢迎下次再来"+roomid+"房间")
 }
 
 //game socket 收到消息, 玩家必然在一个房间里面
-function onMessage(message, session, player, gameRoom) {
+function onMessage(message, player, roomid) {
     //jsb.sendMessage(session, "sb")
     //jsb.sendMessage(session, JSONfn.stringify(gezi01));
 
@@ -94,9 +102,9 @@ function onMessage(message, session, player, gameRoom) {
     }
 
     if (msg != null && msg.id != null) {
-        proto_handler.onProtocol(msg, session, player, gameRoom)
+        proto_handler.onProtocol(msg, player, roomid)
     } else {
-        jsb.sendMessage(session, "你说啥我就说啥:"+message)
+        jsb.sendMessage(player, "你说啥我就说啥:"+message)
     }
 }
 

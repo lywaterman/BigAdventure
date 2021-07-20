@@ -1,5 +1,6 @@
 package com.bad.bigad.util;
 
+import com.bad.bigad.entity.Player;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,11 @@ public enum BridgeForJs {
 
     public Logger log = LoggerFactory.getLogger(BridgeForJs.class);
 
-    public boolean sendMessage(WebSocketSession session, String message) {
+    public boolean sendMessage(Player player, String message) {
         try {
-            session.sendMessage(new TextMessage(message));
+            if (player.getSession() != null) {
+                player.getSession().sendMessage(new TextMessage(message));
+            }
             return true;
         } catch (IOException e) {
             e.printStackTrace();

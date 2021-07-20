@@ -2,6 +2,7 @@ package com.bad.bigad.component;
 
 import com.bad.bigad.config.ClusterConfig;
 import com.bad.bigad.entity.Player;
+import com.bad.bigad.game.LobbyRoom;
 import com.bad.bigad.manager.PlayerManager;
 import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.WsSessionManager;
@@ -51,6 +52,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
     @Autowired
     WsSessionManager wsSessionManager;
 
+    @Autowired
+    LobbyRoom lobbyRoom;
+
     @Value("${player_status_ttl}")
     public int player_status_ttl;
 
@@ -61,7 +65,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
         Player player = playerManager.get(id);
 
-        scriptManager.callJs("onMessage", message.getPayload(), session, player);
+        if (player.getRoom() != null) {
+            player.getRoom().onMessage(player, message.getPayload());
+        }
     }
 
     @Scheduled(fixedRate = 1000)
@@ -138,7 +144,10 @@ public class GameSocketHandler extends TextWebSocketHandler {
                         status);
                 map.put(id, status);
                 map.expire(player_status_ttl, TimeUnit.SECONDS);
-               // PlayerManager.instance.link(session, player);
+
+                scriptManager.callJs("onLogin", player);
+                //进入大厅
+                lobbyRoom.onEnter(player);
 
             } catch (Exception e) {
                 log.error(e.getMessage());
@@ -154,13 +163,13 @@ public class GameSocketHandler extends TextWebSocketHandler {
             return;
         }
 
-        scriptManager.callJs("onLogin", session, player);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Long id = Long.parseLong((String) session.getAttributes().get("id"));
 
+        //session关闭同时移除玩家
         boolean removed = wsSessionManager.remove(
                 id,
                 session
@@ -170,6 +179,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
             //给玩家下线, (有些情况也不会下线, 会由机器人托管)
             //不过目前是session下限，玩家下线
             Player player = playerManager.remove(id);
+            if (player.getRoom() != null) {
+                player.getRoom().onLeave(player, "掉线");
+            }
             //PlayerManager.instance.unlink(session, player);
         }
     }

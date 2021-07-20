@@ -30,6 +30,7 @@ public class ScriptManager {
 
     private File rootFile;
     public ScriptEngine scriptEngine;
+    private boolean inited;
     FilesystemFolder rootFolder;
 
     NashornScriptEngineFactory factory;
@@ -48,6 +49,9 @@ public class ScriptManager {
     }
 
     public boolean reload() {
+        if (!inited) {
+            return false;
+        }
         try {
             Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
             scriptEngine.put("jsb", BridgeForJs.instance);
@@ -100,6 +104,7 @@ public class ScriptManager {
 //        compiled.eval();
         scriptEngine.eval(Files.newBufferedReader(rootFile.toPath()));
 
+        inited = true;
         return true;
     }
 

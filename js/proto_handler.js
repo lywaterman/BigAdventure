@@ -4,8 +4,8 @@ msg_open_grid = {
     posY : 12
 }
 
-function onOpenGrid(msg, session, player) {
-    jsb.sendMessage(session, "协议处理完毕")
+function onOpenGrid(msg, player) {
+    jsb.sendMessage(player, "协议处理完毕")
 }
 
 var protocol_handlers = {
@@ -14,15 +14,15 @@ var protocol_handlers = {
 
 protocol_handlers[111] = onOpenGrid
 
-function onProtocol(msg, session, player) {
+function onProtocol(msg, player, roomid) {
     var handler = protocol_handlers[msg.id]
 
     if (handler) {
-        jsb.sendMessage(session, "有这个协议")
-        handler(msg, session, player)
+        jsb.sendMessage(player, "有这个协议")
+        handler(msg, player)
     } else
     {
-        jsb.sendMessage(session, "没有这个协议")
+        jsb.sendMessage(player, "没有这个协议")
     }
 }
 
