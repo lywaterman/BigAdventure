@@ -60,20 +60,41 @@ public class GameRoomServiceImp implements GameRoomService {
 
         return gameRoom;
     }
+
+    //地图模版id是0的话就不更新，反之更新
     @Override
-    public GameRoom newGameRoom(long id, int mapTempId, int roomType) {
+    public GameRoom newPublicGameRoom(long id, int roomType, int mapTempId) {
+        //如果存在就返回，不new
+        GameRoom gameRoom = getGameRoomById(id);
+        if (gameRoom != null) {
+            return gameRoom;
+        }
+
+        RMap<Long, GameRoom> gamerooms = redissonClient.getMap("gamerooms");
+
+        GameMap gameMap = gameMapService.newGameMap(mapTempId);
+        gameRoom = new GameRoom(gameMap.getId(), roomType);
+        gameRoom.setId(id);
+
+        //放入内存
+        gameRoomManager.putRoom(gameRoom);
+        //放入cache
+        gamerooms.put(gameRoom.getId(), gameRoom);
+        //放入db
+        gameRoomMapper.newGameRoom(gameRoom);
+
+        return gameRoom;
+    }
+
+    @Override
+    public GameRoom newGameRoom(int roomType, int mapTempId) {
         RMap<Long, GameRoom> gamerooms = redissonClient.getMap("gamerooms");
 
         GameMap gameMap = gameMapService.newGameMap(mapTempId);
         GameRoom gameRoom = new GameRoom(gameMap.getId(), roomType);
 
-        if (id == 0) {
-            gameRoom.setId(Util.instance.getRoomSnowId());
-            gameRoomMapper.newGameRoom(gameRoom);
-        } else {
-            gameRoom.setId(id);
-            gameRoomMapper.updateGameRoom(gameRoom);
-        }
+        gameRoom.setId(Util.instance.getRoomSnowId());
+        gameRoomMapper.newGameRoom(gameRoom);
 
         //序列化，放入cache
         gamerooms.put(gameRoom.getId(), gameRoom);

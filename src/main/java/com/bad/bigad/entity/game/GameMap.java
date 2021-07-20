@@ -26,4 +26,12 @@ public class GameMap implements Serializable {
     public GameMap(int tempId) {
         this.tempId = tempId;
     }
+
+    public List<List<Grid>> getGridList() {
+        if (gridList == null) {
+            gridList = new ArrayList<>();
+        }
+
+        return gridList;
+    }
 }

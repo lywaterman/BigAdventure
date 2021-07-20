@@ -17,6 +17,6 @@
     </insert>
 
     <insert id="newGameRoom" parameterType="com.bad.bigad.entity.game.GameRoom">
-        INSERT INTO gameroom (id, map_id, room_type) VALUES(#{id}, #{mapId}, #{roomType});
+        INSERT INTO gameroom (id, map_id, room_type, map_refresh_time) VALUES(#{id}, #{mapId}, #{roomType}, now());
     </insert>
 </mapper>

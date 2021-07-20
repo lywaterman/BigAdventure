@@ -112,8 +112,8 @@ function getGameMapConfig(id) {
 //初始化两张地图
 function initGameRoomService() {
     //tempId
-    var maps = [1, 2];
-    maps.forEach(function (item,index) {
-
+    var rooms = [1, 2, 3, 4, 5, 6, 7];
+    rooms.forEach(function (item,index) {
+        gameRoomService.newPublicGameRoom(item, item, 1)
     })
 }

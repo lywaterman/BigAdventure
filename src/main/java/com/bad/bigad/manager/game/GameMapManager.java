@@ -3,7 +3,6 @@ package com.bad.bigad.manager.game;
 import com.bad.bigad.entity.game.GameMap;
 import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.service.game.GameMapService;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

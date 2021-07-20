@@ -36,7 +36,8 @@ public class ConfigController {
 
     @RequestMapping("/testGameRoom")
     public GameRoom testGameRoom(@RequestParam int id) {
-        return gameRoomService.newGameRoom(1, 1, 1);
+        gameRoomService.init();
+        return gameRoomService.getGameRoomById(1);
     }
 
     @RequestMapping("/testGameMap")
