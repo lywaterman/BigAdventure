@@ -104,14 +104,7 @@ public class ScriptManager {
     }
 
     @SneakyThrows
-    public ScriptManager() {
-        initEngine();
-
-        testEngine();
-    }
-
-    @SneakyThrows
-    private void testEngine() {
+    public void testEngine() {
         //测试相关
         final Invocable invocable = (Invocable) scriptEngine;
 
