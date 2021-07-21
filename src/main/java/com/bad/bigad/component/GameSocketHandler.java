@@ -185,13 +185,13 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 session
         );
 
+        //removed为true，说明是认证过的session
         if (removed) {
             //给玩家下线, (有些情况也不会下线, 会由机器人托管)
             //不过目前是session下限，玩家下线
             Player player = playerManager.remove(id);
             RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
             map.remove(id);
-            map.expire(player_status_ttl, TimeUnit.SECONDS);
 
             if (player.getRoom() != null) {
                 player.getRoom().onLeave(player, "掉线");
