@@ -190,6 +190,8 @@ public class GameSocketHandler extends TextWebSocketHandler {
             //给玩家下线, (有些情况也不会下线, 会由机器人托管)
             //不过目前是session下限，玩家下线
             Player player = playerManager.remove(id);
+            player.setSession(null);
+            
             RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
             map.remove(id);
 
