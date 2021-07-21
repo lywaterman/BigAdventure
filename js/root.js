@@ -81,6 +81,7 @@ function onLoginout(player) {
 
 function onEnter(player, room) {
     jsb.sendMessage(player, "欢迎来到"+room.getId()+"房间")
+    room.broadcastMessageExcept(player.getWx_name()+"进入了房间", player)
 }
 
 function onLeave(player, room) {
