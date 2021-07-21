@@ -29,7 +29,7 @@ public class PlayerController {
     @RequestMapping("/queryPlayerStatus")
     public Map<Long, PlayerOnlineStatus> queryPlayerStatus() {
         //RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
-        RMap<Long, PlayerOnlineStatus> map = redissonClient.getMap("online_status");
+        RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
         //map.expire(10, TimeUnit.SECONDS);
         return map;
     }

@@ -6,6 +6,7 @@ import com.bad.bigad.manager.WsSessionManager;
 import com.bad.bigad.mapper.PlayerMapper;
 import com.bad.bigad.service.PlayerService;
 import com.bad.bigad.util.Util;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 
+@Slf4j
 @Service
 public class PlayerServiceImp implements PlayerService {
     @Autowired
@@ -55,6 +57,7 @@ public class PlayerServiceImp implements PlayerService {
 
     @Override
     public  boolean kickPlayer(Long id, String message) {
+        log.info("踢掉玩家:"+id);
         wsSessionManager.sendMessage(id, message);
 
         wsSessionManager.close(id);

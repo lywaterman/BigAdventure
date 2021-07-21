@@ -39,9 +39,9 @@ public class UpdatePlayerOnline implements ApplicationListener<RefreshScopeRefre
     @Scheduled(fixedRateString = "${update_player_status}", initialDelay = 1000)
     public void updatePlayerOnlineInfo() {
         //RMapCache<Long, Object> map = redissonClient.getMapCache("online_status");
-        RMap<Long, Object> map = redissonClient.getMap("online_status");
-        map.clear();
-        map.putAll(playerManager.getStatusMap());
+        RMapCache<Long, Object> map = redissonClient.getMapCache("online_status");
+
+        map.putAll(playerManager.getStatusMap(), player_status_ttl, TimeUnit.SECONDS);
 
         //更新完数据再设置超时
         map.expire(player_status_ttl, TimeUnit.SECONDS);

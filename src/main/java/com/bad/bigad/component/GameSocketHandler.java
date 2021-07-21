@@ -92,8 +92,8 @@ public class GameSocketHandler extends TextWebSocketHandler {
             session.sendMessage(new TextMessage("登陆成功"));
         }
 
-        //RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
-        RMap<Long, PlayerOnlineStatus> map = redissonClient.getMap("online_status");
+        RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
+        //RMap<Long, PlayerOnlineStatus> map = redissonClient.getMap("online_status");
 
         RLock lock = redissonClient.getLock(strId);
 
@@ -103,6 +103,15 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 PlayerOnlineStatus playerOnlineStatus = map.get(id);
 
                 boolean online = (playerOnlineStatus != null) && (playerOnlineStatus.getServerId() != -1);
+
+                if (!online) {
+                    log.info("玩家不在线");
+                    if (playerOnlineStatus != null) {
+                        log.info(playerOnlineStatus.toString());
+                    } else {
+                        log.info("没有状态");
+                    }
+                }
 
                 if (online) {
                     //说明玩家在线
@@ -142,9 +151,10 @@ public class GameSocketHandler extends TextWebSocketHandler {
                         id,
                         player,
                         status);
-                map.put(id, status);
+                map.put(id, status, player_status_ttl, TimeUnit.SECONDS);
                 map.expire(player_status_ttl, TimeUnit.SECONDS);
 
+                //先触发登陆时间
                 scriptManager.callJs("onLogin", player);
                 //进入大厅
                 lobbyRoom.onEnter(player);
@@ -179,6 +189,10 @@ public class GameSocketHandler extends TextWebSocketHandler {
             //给玩家下线, (有些情况也不会下线, 会由机器人托管)
             //不过目前是session下限，玩家下线
             Player player = playerManager.remove(id);
+            RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
+            map.remove(id);
+            map.expire(player_status_ttl, TimeUnit.SECONDS);
+
             if (player.getRoom() != null) {
                 player.getRoom().onLeave(player, "掉线");
             }
