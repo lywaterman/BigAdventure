@@ -1,9 +1,7 @@
 package com.bad.bigad.component;
 
-import com.bad.bigad.config.ClusterConfig;
 import com.bad.bigad.manager.PlayerManager;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RMap;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +44,7 @@ public class UpdatePlayerOnline implements ApplicationListener<RefreshScopeRefre
         //更新完数据再设置超时
         map.expire(player_status_ttl, TimeUnit.SECONDS);
         //map.putAll(PlayerManager.instance.getStatusMap(), player_status_ttl, TimeUnit.SECONDS);
-        log.info("更新在线玩家状态");
+        //log.info("更新在线玩家状态");
     }
 
     @Override
