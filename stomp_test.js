@@ -2,7 +2,7 @@ Object.assign(global, { WebSocket: require('websocket').w3cwebsocket });
 StompJs = require('@stomp/stompjs');
 const client = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/chat?token='+
-    'eyJhbGciOiJIUzI1NiJ9.eyJuaWNrX25hbWUiOiLmtIvmtIsyMjIyIiwiaXNzIjoiYmFkIiwiaWQiOiI2MDcyMzQyMzA0NTk1NjgxMjgiLCJleHAiOjE2MjU3MzgzMDIsImlhdCI6MTYyNTcxNjcwMn0.Mzi-12kU5Kf1mUSFoA8LIhRpoQHOWp1dCcjtpVWMZb0',
+    'eyJhbGciOiJIUzI1NiJ9.eyJuaWNrX25hbWUiOiLmtIvmtIsyMjIyIiwiaXNzIjoiYmFkIiwiaWQiOiI2MTA0ODU4MTYzNjc1MTc2OTYiLCJleHAiOjE2NDc2NzI1MTcsImlhdCI6MTYyNjA3MjUxN30.6J44PZMW7tjJoGE6hSSFHLe_2gmFzCxPTkBFF7_ZgUM',
     connectHeaders: {
         //token: 'eyJhbGciOiJIUzI1NiJ9.eyJ3eF9uYW1lIjoibHkxMTEyMjIxMSIsInd4X25pY2tfbmFtZSI6Iua0i-a0izIyMjIiLCJpc3MiOiJiYWQiLCJleHAiOjE2MjQ4Nzc5MzAsImlhdCI6MTYyNDg1NjMzMH0.TC2rgbT9aJwjb-6FjHs7_eOtUFnQofUKPMPzhaE3QF4'
     },

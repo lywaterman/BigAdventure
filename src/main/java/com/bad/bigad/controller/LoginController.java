@@ -44,6 +44,7 @@ class LoginParamToken {
 class LoginResult {
     private int result;
     private String desc;
+    private String id;
     private String user_nick_name;
     private String token;
 }
@@ -179,6 +180,7 @@ public class LoginController {
         }
 
         LoginResult loginResult = new LoginResult();
+        loginResult.setId(player.getIdStr());
         loginResult.setUser_nick_name(player.getWx_nick_name());
         loginResult.setToken(createPlayerToken(player));
         return loginResult;
