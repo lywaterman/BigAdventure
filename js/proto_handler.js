@@ -18,11 +18,10 @@ function onProtocol(msg, player, room) {
     var handler = protocol_handlers[msg.id]
 
     if (handler) {
-        jsb.sendMessage(player, "有这个协议")
+        jsb.sendMessage(player, "有这个协议, 你现在在房间" + room.getId())
         handler(msg, player)
-    } else
-    {
-        jsb.sendMessage(player, "没有这个协议")
+    } else {
+        jsb.sendMessage(player, "没有这个协议, 你现在在房间" + room.getId())
     }
 }
 

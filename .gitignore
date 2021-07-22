@@ -39,3 +39,7 @@ mvnw.cmd
 node_modules
 package-lock.json
 package.json
+out
+*.log
+*.log
+bigad-0.0.1-SNAPSHOT.jar

@@ -1,43 +1,32 @@
 package com.bad.bigad.config;
 
 import com.bad.bigad.component.GameSocketHandler;
-import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.WsSessionManager;
-import com.bad.bigad.model.ChatMessage;
-import com.bad.bigad.service.ChatService;
-import com.bad.bigad.util.BridgeForJs;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.AbstractSubscribableChannel;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.ExecutorChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
-import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 @Configuration
-@EnableWebSocketMessageBroker
 @EnableWebSocket
+@EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSocketConfigurer
 {
-    @Autowired
-    HeaderParamInterceptor headerParamInterceptor;
+//    @Autowired
+//    HeaderParamInterceptor headerParamInterceptor;
 
     @Autowired
     TokenCheckInterceptor tokenCheckInterceptor;
@@ -52,14 +41,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
     WsSessionManager wsSessionManager;
 
     @Autowired
-    ChatService chatService;
-
-    private final MessageChannel outChannel;
-
-    @Autowired
-    public WebSocketConfig(MessageChannel clientOutboundChannel) {
-        this.outChannel = clientOutboundChannel;
-    }
+    private MessageChannel clientOutboundChannel;
 
 
     @Override
@@ -198,10 +180,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
                 Message<byte[]> outMessage =
                         MessageBuilder.createMessage(new byte[0], outAccessor.getMessageHeaders());
 
-                outChannel.send(outMessage);
+                clientOutboundChannel.send(outMessage);
             }
         });
     }
+
 
 //    @Override
 //    public void configureClientInboundChannel(ChannelRegistration registration) {
@@ -246,4 +229,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSoc
 //            }
 //        };
 //    }
+
 }
