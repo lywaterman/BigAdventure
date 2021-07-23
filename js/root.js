@@ -102,10 +102,11 @@ function onMessage(message, player, room) {
 
     }
 
+    //协议处理完成，交给对应的协议处理模块
     if (msg != null && msg.id != null) {
         proto_handler.onProtocol(msg, player, room)
     } else {
-        jsb.sendMessage(player, "你说啥我就说啥:"+message)
+        jsb.sendMessage(player, JSONfn.stringify({id:2, desc:"协议格式不对"}))
     }
 }
 
