@@ -54,7 +54,6 @@ public class GameRoomServiceImp implements GameRoomService {
             gameRoom.setCurMap(
                     gameMapService.getGameMapById(gameRoom.getMapId())
             );
-
             gameRoomManager.putRoom(gameRoom);
         }
 
@@ -75,7 +74,6 @@ public class GameRoomServiceImp implements GameRoomService {
         GameMap gameMap = gameMapService.newGameMap(mapTempId);
         gameRoom = new GameRoom(gameMap.getId(), roomType);
         gameRoom.setId(id);
-
         //放入内存
         gameRoomManager.putRoom(gameRoom);
         //放入cache

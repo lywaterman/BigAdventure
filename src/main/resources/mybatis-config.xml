@@ -5,5 +5,6 @@
 <configuration>
     <typeHandlers>
         <typeHandler handler="com.bad.bigad.handlers.JsonTypeHandler" javaType="com.google.gson.JsonElement" jdbcType="VARCHAR"/>
+        <typeHandler handler="com.bad.bigad.handlers.LongTypeHandler" javaType="java.lang.Long" jdbcType="BIGINT"/>
     </typeHandlers>
 </configuration>

@@ -15,7 +15,12 @@ function onOpenGrid(msg, player) {
 }
 
 function onEnterRoom(msg, player) {
+    var roomId = msg.room_id
 
+    var gameRoom = gameRoomService.getGameRoomById(roomId)
+    log.info(gameRoom.toString())
+    log.info(gameRoom.onEnter)
+    gameRoom.onEnter(player)
 }
 
 var protocol_handlers = {
@@ -35,7 +40,7 @@ function getResultProto(id, desc) {
 }
 
 
-function onProtocol(msg, player, room) {
+function onProtocol(msg, player) {
     var handler = protocol_handlers[msg.id]
 
     if (handler) {

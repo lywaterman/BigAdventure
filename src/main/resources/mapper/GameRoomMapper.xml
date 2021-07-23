@@ -3,7 +3,7 @@
 <mapper namespace="com.bad.bigad.mapper.GameRoomMapper">
     <resultMap id="gameRoom" type="com.bad.bigad.entity.game.GameRoom">
         <result column="id" property="id"/>
-        <result column="map_id" property="mapId"/>
+        <result column="map_id" property="mapId" typeHandler="com.bad.bigad.handlers.LongTypeHandler"/>
         <result column="room_type" property="roomType"/>
     </resultMap>
 

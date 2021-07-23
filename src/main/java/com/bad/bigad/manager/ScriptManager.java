@@ -25,6 +25,8 @@ import java.nio.file.Path;
 @Slf4j
 @Component
 public class ScriptManager {
+    public static ScriptManager INSTANCE;
+
     @Autowired
     private GameRoomService gameRoomService;
 
@@ -34,6 +36,10 @@ public class ScriptManager {
     FilesystemFolder rootFolder;
 
     NashornScriptEngineFactory factory;
+
+    public ScriptManager() {
+        INSTANCE = this;
+    }
 
     public Object callJs(String name, Object... args) {
         try {
@@ -55,6 +61,7 @@ public class ScriptManager {
         try {
             Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
             scriptEngine.put("jsb", BridgeForJs.instance);
+            scriptEngine.put("log", log);
             scriptEngine.put("gameRoomService", gameRoomService);
             scriptEngine.eval(Files.newBufferedReader(rootFile.toPath()));
         } catch (ScriptException e) {
@@ -94,6 +101,7 @@ public class ScriptManager {
         //赋予common.js的require能力
         Require.enable((NashornScriptEngine)scriptEngine, rootFolder);
         scriptEngine.put("jsb", BridgeForJs.instance);
+        scriptEngine.put("log", log);
         scriptEngine.put("gameRoomService", gameRoomService);
 
         //得到root.js

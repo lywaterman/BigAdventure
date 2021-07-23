@@ -84,12 +84,12 @@ function onEnter(player, room) {
     room.broadcastMessageExcept(player.getWx_name()+"进入了房间", player)
 }
 
-function onLeave(player, room) {
-    room.broadcastMessageExcept(player.getWx_name()+"离开了房间", player)
+function onLeave(player, room, desc) {
+    room.broadcastMessageExcept(player.getWx_name()+"离开了房间, 因为"+desc, player)
 }
 
 //game socket 收到消息, 玩家必然在一个房间里面
-function onMessage(message, player, room) {
+function onMessage(message, player) {
     //jsb.sendMessage(session, "sb")
     //jsb.sendMessage(session, JSONfn.stringify(gezi01));
 
@@ -104,7 +104,7 @@ function onMessage(message, player, room) {
 
     //协议处理完成，交给对应的协议处理模块
     if (msg != null && msg.id != null) {
-        proto_handler.onProtocol(msg, player, room)
+        proto_handler.onProtocol(msg, player)
     } else {
         jsb.sendMessage(player, JSONfn.stringify({id:2, desc:"协议格式不对"}))
     }
