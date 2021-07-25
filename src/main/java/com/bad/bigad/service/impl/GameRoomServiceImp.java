@@ -42,8 +42,8 @@ public class GameRoomServiceImp implements GameRoomService {
         }
 
         //cache找
-        RMap<Long, GameRoom> maps = redissonClient.getMap("gamerooms");
-        gameRoom = maps.get(id);
+//        RMap<Long, GameRoom> maps = redissonClient.getMap("gamerooms");
+//        gameRoom = maps.get(id);
 
         //cache没有，取db找
         if (gameRoom == null) {
