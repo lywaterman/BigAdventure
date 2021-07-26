@@ -1,5 +1,6 @@
 package com.bad.bigad.entity;
 
+import com.bad.bigad.entity.game.GameReel;
 import com.bad.bigad.game.Room;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.Serializable;
+import java.util.Map;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
@@ -32,4 +34,7 @@ public class Player implements Serializable {
 
     @JsonIgnore
     transient private WebSocketSession session;
+
+    @JsonIgnore
+    transient private Map<Long, GameReel> reelList;
 }

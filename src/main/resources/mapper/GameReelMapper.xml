@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bad.bigad.mapper.GameReelMapper">
+    <resultMap id="gameReel" type="com.bad.bigad.entity.game.GameReel">
+        <result column="id" property="id"/>
+        <result column="temp_id" property="tempId"/>
+        <result column="cur_frag" property="curFrag"/>
+        <result column="owner_id" property="ownerId"/>
+    </resultMap>
+
+    <select id="getGameReelByOwnerId" resultMap="gameReel" parameterType="long">
+        SELECT id, temp_id, cur_frag, owner_id from gamereel WHERE owner_id = #{ownerId}
+    </select>
+
+    <update id="addGameReelCount">
+        UPDATE gamereel SET cur_frag=cur_frag+#{count} WHERE id = #{id}
+    </update>
+
+    <insert id="newGameReel" parameterType="com.bad.bigad.entity.game.GameReel">
+        INSERT INTO gamereel (id, temp_id, cur_frag, owner_id) VALUES(#{id}, #{tempId}, #{curFrag}, #{ownerId});
+    </insert>
+</mapper>

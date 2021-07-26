@@ -78,6 +78,7 @@ function onLogin(player) {
 
 
 function onEnter(player, room) {
+    //处理房间信息
     jsb.sendMessage(player, "欢迎来到"+room.getId()+"房间")
     room.broadcastMessageExcept(player.getWx_name()+"进入了房间", player)
 }

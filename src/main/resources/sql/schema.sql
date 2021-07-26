@@ -24,3 +24,12 @@ create table gameroom (
     map_refresh_time datetime,
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+drop table if exists gamereel;
+create table gamereel (
+    id bigint UNIQUE,
+    temp_id int,
+    cur_frag int,
+    owner_id bigint,
+    primary key (id)
+)
