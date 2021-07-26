@@ -23,10 +23,6 @@ public class GameMap implements Serializable {
 
     private HashMap<String, Grid> varGrid = new HashMap<>();
 
-    public GameMap(int tempId) {
-        this.tempId = tempId;
-    }
-
     public List<List<Grid>> getGridList() {
         if (gridList == null) {
             gridList = new ArrayList<>();

@@ -92,8 +92,10 @@ public class GameMapServiceImp implements GameMapService {
     public GameMap newGameMap(int tempId) {
         RMap<Long, GameMap> maps = redissonClient.getMap("gamemaps");
 
-        GameMap gameMap = new GameMap(tempId);
+        GameMap gameMap = new GameMap();
+        gameMap.setTempId(tempId);
         gameMap.setId(Util.instance.getMapSnowId());
+
         initFromScript(gameMap);
 
         //先写db
