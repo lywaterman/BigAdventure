@@ -70,14 +70,12 @@ var chat_another_login = JSON.stringify({
     type: 'LOGIN'
 })
 
-//玩家登陆成功事件， 多线程
+//玩家登陆成功事件， 多线程， 链接成功就是登陆
 function onLogin(player) {
     jsb.sendMessage(player, "你好, "+player.getWx_name())
 }
 
-function onLoginout(player) {
-    jsb.sendMessage(player, "goodbye, "+player.getWx_name())
-}
+
 
 function onEnter(player, room) {
     jsb.sendMessage(player, "欢迎来到"+room.getId()+"房间")
