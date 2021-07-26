@@ -6,6 +6,7 @@ import com.bad.bigad.game.LobbyRoom;
 import com.bad.bigad.manager.PlayerManager;
 import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.WsSessionManager;
+import com.bad.bigad.manager.game.LogicManager;
 import com.bad.bigad.model.PlayerOnlineStatus;
 import com.bad.bigad.service.PlayerService;
 import com.bad.bigad.util.BridgeForJs;
@@ -25,6 +26,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -55,19 +57,23 @@ public class GameSocketHandler extends TextWebSocketHandler {
     @Autowired
     LobbyRoom lobbyRoom;
 
+    @Autowired
+    LogicManager logicManager;
+
     @Value("${player_status_ttl}")
     public int player_status_ttl;
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
+        //多线程访问
+        log.info("收到信息"+String.valueOf(Thread.currentThread().getId()));
         String strId = (String) session.getAttributes().get("id");
         Long id = Long.parseLong(strId);
 
         Player player = playerManager.get(id);
 
-        if (player.getRoom() != null) {
-            player.getRoom().onMessage(player, message.getPayload());
-        }
+        logicManager.processMsg(player, message.getPayload());
+
     }
 
     @Scheduled(fixedRate = 1000)
@@ -78,6 +84,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
     //可以处理同步登陆
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        log.info("链接完成"+String.valueOf(Thread.currentThread().getId()));
         String strId = (String) session.getAttributes().get("id");
         Long id = Long.parseLong(strId);
         //检查是否在线
@@ -177,6 +184,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        log.info("链接断开"+String.valueOf(Thread.currentThread().getId()));
         Long id = Long.parseLong((String) session.getAttributes().get("id"));
 
         //session关闭同时移除玩家
