@@ -72,8 +72,11 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
         Player player = playerManager.get(id);
 
-        logicManager.processMsg(player, message.getPayload());
-
+        if (player.getRoom() != null) {
+            logicManager.processMsg(player, message.getPayload());
+        } else {
+            log.info("玩家不在任何房间中，不处理消息");
+        }
     }
 
     @Scheduled(fixedRate = 1000)
