@@ -11,6 +11,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +23,7 @@ public class Room implements Serializable {
 
     //玩家列表
     @JsonIgnore
-    transient protected Map<Long, Player> playerList = new ConcurrentHashMap<>();
+    transient protected Map<Long, Player> playerList = new HashMap<>();
 
     public void onEnter(Player player) {
         if (player.getRoom() != null) {

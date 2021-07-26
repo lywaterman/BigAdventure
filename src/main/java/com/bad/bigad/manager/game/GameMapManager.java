@@ -6,6 +6,8 @@ import com.bad.bigad.service.game.GameMapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 //重要，设计先找GameMapManager，没有就找service，service来处理cache和db
@@ -17,9 +19,9 @@ public class GameMapManager {
     @Autowired
     GameMapService gameMapService;
 
-    private ConcurrentHashMap<Long, GameMap> gameMaps;
+    private Map<Long, GameMap> gameMaps;
     {
-        gameMaps = new ConcurrentHashMap<Long, GameMap>();
+        gameMaps = new HashMap<Long, GameMap>();
     }
 
     public GameMap getGameMap(long id) {
