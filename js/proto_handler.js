@@ -17,10 +17,19 @@ function onOpenGrid(msg, player) {
 function onEnterRoom(msg, player) {
     var roomId = msg.room_id
 
+    if (roomId == 0) {
+        var lobbyRoom = gameRoomService.getLobbyRoom()
+        lobbyRoom.onEnter(player)
+        return
+    }
+
     var gameRoom = gameRoomService.getGameRoomById(roomId)
-    log.info(gameRoom.toString())
-    log.info(gameRoom.onEnter)
-    gameRoom.onEnter(player)
+
+    if (gameRoom) {
+        gameRoom.onEnter(player)
+    } else {
+        jsb.sendMessage(player, JSONfn.stringify({id:11, desc:"没有这个房间"}))
+    }
 }
 
 var protocol_handlers = {

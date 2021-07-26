@@ -2,6 +2,7 @@ package com.bad.bigad.service.impl;
 
 import com.bad.bigad.entity.game.GameMap;
 import com.bad.bigad.entity.game.GameRoom;
+import com.bad.bigad.game.LobbyRoom;
 import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.game.GameRoomManager;
 import com.bad.bigad.mapper.GameRoomMapper;
@@ -32,6 +33,10 @@ public class GameRoomServiceImp implements GameRoomService {
 
     @Autowired
     ScriptManager scriptManager;
+
+    public LobbyRoom getLobbyRoom() {
+        return gameRoomManager.getLobbyRoom();
+    }
 
     @Override
     public GameRoom getGameRoomById(long id) {

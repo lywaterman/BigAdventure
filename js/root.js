@@ -70,7 +70,7 @@ var chat_another_login = JSON.stringify({
     type: 'LOGIN'
 })
 
-//玩家登陆成功事件
+//玩家登陆成功事件， 多线程
 function onLogin(player) {
     jsb.sendMessage(player, "你好, "+player.getWx_name())
 }
@@ -88,6 +88,7 @@ function onLeave(player, room, desc) {
     room.broadcastMessageExcept(player.getWx_name()+"离开了房间, 因为"+desc, player)
 }
 
+//玩家消息，进入消息逻辑队列
 //game socket 收到消息, 玩家必然在一个房间里面
 function onMessage(message, player) {
     //jsb.sendMessage(session, "sb")
