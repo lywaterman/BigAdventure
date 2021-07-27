@@ -32,16 +32,25 @@ public enum Util {
         roomSnow = new SnowFlake(9,2);
     }
 
+    private SnowFlake reelSnow;
+    {
+        reelSnow = new SnowFlake(9,3);
+    }
+
     public long getSnowId() {
         return snowFlake.nextId();
     }
 
     public long getMapSnowId() {
-        return snowFlake.nextId();
+        return mapSnow.nextId();
     }
 
     public long getRoomSnowId() {
-        return snowFlake.nextId();
+        return roomSnow.nextId();
+    }
+
+    public long getReelSnowId() {
+        return reelSnow.nextId();
     }
 
     public Map<String, Object> parseToken(String token, String key) {

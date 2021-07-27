@@ -9,6 +9,6 @@ import java.util.List;
 @Mapper
 public interface GameReelMapper {
     public List<GameReel> getGameReelByOwnerId(@Param("ownerId") long ownerId);
-    public void addGameReelCount(@Param("id") long id,@Param("count") int count);
+    public void updateGameReel(GameReel gameReel);
     public void newGameReel(GameReel gameReel);
 }

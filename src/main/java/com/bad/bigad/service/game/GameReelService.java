@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface GameReelService {
     public Map<Long, GameReel> getGameReelByOwnerId(long ownerId);
-    public void addGameReelCount(long id, int count);
+    public void updateGameReel(GameReel gameReel);
     public GameReel newGameReel(long ownerId, int tempId);
 }

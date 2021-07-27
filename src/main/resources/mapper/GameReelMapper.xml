@@ -12,8 +12,8 @@
         SELECT id, temp_id, cur_frag, owner_id from gamereel WHERE owner_id = #{ownerId}
     </select>
 
-    <update id="addGameReelCount">
-        UPDATE gamereel SET cur_frag=cur_frag+#{count} WHERE id = #{id}
+    <update id="updateGameReel" parameterType="com.bad.bigad.entity.game.GameReel">
+        UPDATE gamereel SET cur_frag=#{curFrag} WHERE id = #{id}
     </update>
 
     <insert id="newGameReel" parameterType="com.bad.bigad.entity.game.GameReel">
