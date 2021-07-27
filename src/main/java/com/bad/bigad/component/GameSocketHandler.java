@@ -3,16 +3,14 @@ package com.bad.bigad.component;
 import com.bad.bigad.config.ClusterConfig;
 import com.bad.bigad.entity.Player;
 import com.bad.bigad.game.LobbyRoom;
-import com.bad.bigad.manager.PlayerManager;
+import com.bad.bigad.manager.OnlinePlayerManager;
 import com.bad.bigad.manager.ScriptManager;
 import com.bad.bigad.manager.WsSessionManager;
 import com.bad.bigad.manager.game.LogicManager;
 import com.bad.bigad.model.PlayerOnlineStatus;
 import com.bad.bigad.service.PlayerService;
-import com.bad.bigad.util.BridgeForJs;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
-import org.redisson.api.RMap;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -49,7 +46,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
     ScriptManager scriptManager;
 
     @Autowired
-    PlayerManager playerManager;
+    OnlinePlayerManager onlinePlayerManager;
 
     @Autowired
     WsSessionManager wsSessionManager;
@@ -70,7 +67,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
         String strId = (String) session.getAttributes().get("id");
         Long id = Long.parseLong(strId);
 
-        Player player = playerManager.get(id);
+        Player player = onlinePlayerManager.get(id);
 
         if (player.getRoom() != null) {
             logicManager.processMsg(player, message.getPayload());
@@ -157,7 +154,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 player.setSession(session);
 
                 PlayerOnlineStatus status = new PlayerOnlineStatus(ClusterConfig.curServerID);
-                playerManager.add(
+                onlinePlayerManager.add(
                         id,
                         player,
                         status);
@@ -200,7 +197,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
         if (removed) {
             //给玩家下线, (有些情况也不会下线, 会由机器人托管)
             //不过目前是session下限，玩家下线
-            Player player = playerManager.remove(id);
+            Player player = onlinePlayerManager.remove(id);
             player.setSession(null);
 
             RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");

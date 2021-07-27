@@ -1,6 +1,6 @@
 package com.bad.bigad.component;
 
-import com.bad.bigad.manager.PlayerManager;
+import com.bad.bigad.manager.OnlinePlayerManager;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
@@ -26,7 +26,7 @@ public class UpdatePlayerOnline implements ApplicationListener<RefreshScopeRefre
     DiscoveryClient discoveryClient;
 
     @Autowired
-    PlayerManager playerManager;
+    OnlinePlayerManager onlinePlayerManager;
 
     @Value("${player_status_ttl}")
     public int player_status_ttl;
@@ -39,7 +39,7 @@ public class UpdatePlayerOnline implements ApplicationListener<RefreshScopeRefre
         //RMapCache<Long, Object> map = redissonClient.getMapCache("online_status");
         RMapCache<Long, Object> map = redissonClient.getMapCache("online_status");
 
-        map.putAll(playerManager.getStatusMap(), player_status_ttl, TimeUnit.SECONDS);
+        map.putAll(onlinePlayerManager.getStatusMap(), player_status_ttl, TimeUnit.SECONDS);
 
         //更新完数据再设置超时
         map.expire(player_status_ttl, TimeUnit.SECONDS);

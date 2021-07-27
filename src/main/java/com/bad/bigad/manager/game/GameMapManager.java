@@ -13,11 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 //重要，设计先找GameMapManager，没有就找service，service来处理cache和db
 @Component
 public class GameMapManager {
-    @Autowired
-    ScriptManager scriptManager;
-
-    @Autowired
-    GameMapService gameMapService;
 
     private Map<Long, GameMap> gameMaps;
     {

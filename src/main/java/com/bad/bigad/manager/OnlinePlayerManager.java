@@ -8,7 +8,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class PlayerManager {
+public class OnlinePlayerManager {
     private ConcurrentHashMap<Long, Player> players;
     {
         players = new ConcurrentHashMap<>();

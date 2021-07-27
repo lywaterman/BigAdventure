@@ -1,10 +1,10 @@
 package com.bad.bigad.service.impl;
 
 import com.bad.bigad.entity.Player;
-import com.bad.bigad.manager.PlayerManager;
 import com.bad.bigad.manager.WsSessionManager;
 import com.bad.bigad.mapper.PlayerMapper;
 import com.bad.bigad.service.PlayerService;
+import com.bad.bigad.service.game.GameReelService;
 import com.bad.bigad.util.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMap;
@@ -12,8 +12,6 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
-
-import java.math.BigInteger;
 
 @Slf4j
 @Service
@@ -28,6 +26,9 @@ public class PlayerServiceImp implements PlayerService {
 
     @Autowired
     WsSessionManager wsSessionManager;
+
+    @Autowired
+    GameReelService gameReelService;
 
     @Override
     public Player findById(long id) {
@@ -52,7 +53,11 @@ public class PlayerServiceImp implements PlayerService {
     @Override
     public Player GetPlayerFromCache(Long id) {
         RMap<Long, Player> players = redissonClient.getMap("players");
-        return players.get(id);
+        Player player = players.get(id);
+        if (player != null) {
+            player.setReelList(gameReelService.getGameReelByOwnerId(id));
+        }
+        return player;
     }
 
     @Override

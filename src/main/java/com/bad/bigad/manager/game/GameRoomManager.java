@@ -17,10 +17,6 @@ public class GameRoomManager {
 
     private Map<Long, GameRoom> gameRoomMap = new HashMap<>();
 
-    public void init() {
-        //初始化房间放这里
-    }
-
     public GameRoom getRoom(long id) {
         return gameRoomMap.get(id);
     }
