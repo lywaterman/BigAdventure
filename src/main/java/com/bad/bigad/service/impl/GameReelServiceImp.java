@@ -1,8 +1,11 @@
 package com.bad.bigad.service.impl;
 
+import com.bad.bigad.entity.Player;
 import com.bad.bigad.entity.game.GameMap;
 import com.bad.bigad.entity.game.GameReel;
+import com.bad.bigad.manager.OnlinePlayerManager;
 import com.bad.bigad.mapper.GameReelMapper;
+import com.bad.bigad.mapper.PlayerMapper;
 import com.bad.bigad.service.game.GameReelService;
 import com.bad.bigad.util.Util;
 import org.redisson.api.RListMultimap;
@@ -22,6 +25,9 @@ public class GameReelServiceImp implements GameReelService {
 
     @Autowired
     RedissonClient redissonClient;
+
+    @Autowired
+    OnlinePlayerManager onlinePlayerManager;
 
     public void initFromScript(GameReel gameReel) {
 
@@ -64,6 +70,13 @@ public class GameReelServiceImp implements GameReelService {
         gameReel.setId(Util.instance.getReelSnowId());
 
         initFromScript(gameReel);
+
+        //先放入玩家背包
+        Player player = onlinePlayerManager.get(ownerId);
+        if (player != null) {
+            //玩家在线，发送到玩家背包
+            player.getReelList().put(gameReel.getId(), gameReel);
+        }
 
         RMap<Long, GameReel> gameReels = redissonClient.getMap(String.valueOf(gameReel.getOwnerId()));
         gameReels.put(gameReel.getId(), gameReel);

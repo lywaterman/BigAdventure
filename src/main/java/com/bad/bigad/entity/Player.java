@@ -37,4 +37,8 @@ public class Player implements Serializable {
 
     @JsonIgnore
     transient private Map<Long, GameReel> reelList;
+
+    //进地图选择reel挖宝
+    @JsonIgnore
+    transient private Long curGameReel;
 }

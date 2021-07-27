@@ -28,8 +28,14 @@ function onEnterRoom(msg, player) {
     if (gameRoom) {
         gameRoom.onEnter(player)
     } else {
-        jsb.sendMessage(player, JSONfn.stringify({id:11, desc:"没有这个房间"}))
+        jsb.sendMessage(player, JSONfn.stringify({result:11, desc:"没有这个房间"}))
     }
+}
+
+function onTestGetReel(msg, player) {
+    var temp_id = msg.temp_id
+    gameReelService.newGameReel(player.getId(), temp_id)
+    jsb.sendMessage(player, JSONfn.stringify({result:0, desc: "创建成功"}))
 }
 
 var protocol_handlers = {
@@ -38,6 +44,7 @@ var protocol_handlers = {
 
 protocol_handlers[1111] = onOpenGrid
 protocol_handlers[1112] = onEnterRoom
+protocol_handlers[1113] = onTestGetReel
 
 function getResultProto(id, desc) {
     var result_proto = {

@@ -1,5 +1,6 @@
 package com.bad.bigad.manager;
 
+import com.bad.bigad.service.game.GameReelService;
 import com.bad.bigad.service.game.GameRoomService;
 import com.bad.bigad.util.BridgeForJs;
 import com.coveo.nashorn_modules.FilesystemFolder;
@@ -29,6 +30,9 @@ public class ScriptManager {
 
     @Autowired
     private GameRoomService gameRoomService;
+
+    @Autowired
+    private GameReelService gameReelService;
 
     private File rootFile;
     public ScriptEngine scriptEngine;
@@ -63,6 +67,7 @@ public class ScriptManager {
             scriptEngine.put("jsb", BridgeForJs.instance);
             scriptEngine.put("log", log);
             scriptEngine.put("gameRoomService", gameRoomService);
+            scriptEngine.put("gameReelService", gameReelService);
             scriptEngine.eval(Files.newBufferedReader(rootFile.toPath()));
         } catch (ScriptException e) {
             e.printStackTrace();
@@ -103,6 +108,7 @@ public class ScriptManager {
         scriptEngine.put("jsb", BridgeForJs.instance);
         scriptEngine.put("log", log);
         scriptEngine.put("gameRoomService", gameRoomService);
+        scriptEngine.put("gameReelService", gameReelService);
 
         //得到root.js
         //File rootFile = ResourceUtils.getFile("classpath:js/root.js");
