@@ -2,9 +2,11 @@ package com.bad.bigad.controller;
 
 import com.bad.bigad.config.ClusterConfig;
 import com.bad.bigad.entity.game.GameMap;
+import com.bad.bigad.entity.game.GameReel;
 import com.bad.bigad.entity.game.GameRoom;
 import com.bad.bigad.manager.game.GameMapManager;
 import com.bad.bigad.service.game.GameMapService;
+import com.bad.bigad.service.game.GameReelService;
 import com.bad.bigad.service.game.GameRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -29,6 +31,9 @@ public class ConfigController {
     @Autowired
     GameMapManager gameMapManager;
 
+    @Autowired
+    GameReelService gameReelService;
+
     @RequestMapping("/config")
     public Map getServerList() {
         return clusterConfig.getServerNodes();
@@ -38,6 +43,14 @@ public class ConfigController {
     public GameRoom testGameRoom(@RequestParam int id) {
         gameRoomService.init();
         return gameRoomService.getGameRoomById(1);
+    }
+
+    @RequestMapping("testGameReel")
+    public Map<Long,GameReel> testGameReel(@RequestParam int temp_id) {
+        GameReel gameReel = gameReelService.newGameReel(1, 1);
+
+        Map<Long,GameReel> gameReelList  = gameReelService.getGameReelByOwnerId(gameReel.getOwnerId());
+        return gameReelList;
     }
 
     @RequestMapping("/testGameMap")
