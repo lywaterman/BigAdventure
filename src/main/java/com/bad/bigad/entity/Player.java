@@ -40,5 +40,15 @@ public class Player implements Serializable {
 
     //进地图选择reel挖宝
     @JsonIgnore
-    transient private Long curGameReel;
+    transient private GameReel curGameReel;
+
+    //for js
+    public boolean setCurGameReel(String reelId) {
+        curGameReel = reelList.get(Long.parseLong(reelId));
+        if (curGameReel != null) {
+            return true;
+        }
+
+        return false;
+    }
 }

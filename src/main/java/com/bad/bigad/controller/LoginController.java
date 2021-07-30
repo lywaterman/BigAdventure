@@ -97,7 +97,7 @@ public class LoginController {
         if (player == null) {
             //内存没有，加载数据到内存
             //应该锁id最好，但是id可能不再redis
-            Lock lock = redissonClient.getLock(idStr);
+            Lock lock = redissonClient.getLock("lock_"+idStr);
 
             Boolean canLock = lock.tryLock();
             if (!canLock) {
@@ -151,7 +151,7 @@ public class LoginController {
         if (id == null || player == null) {
             //内存没有，加载数据到内存
             //应该锁id最好，但是id可能不再redis
-            Lock lock = redissonClient.getLock(param.getWx_name());
+            Lock lock = redissonClient.getLock("lock_"+param.getWx_name());
 
             Boolean canLock = lock.tryLock();
             if (!canLock) {

@@ -10,7 +10,12 @@ msg_open_grid = {
 
 }
 
+//开格子
 function onOpenGrid(msg, player) {
+    var gameReel = player.getCurGameReel()
+    gameReel.curFrag = gameReel.curFrag + 1
+
+    gameReelService.updateGameReel(gameReel)
     jsb.sendMessage(player, "协议处理完毕")
 }
 
@@ -20,6 +25,20 @@ function onEnterRoom(msg, player) {
     if (roomId == 0) {
         var lobbyRoom = gameRoomService.getLobbyRoom()
         lobbyRoom.onEnter(player)
+        return
+    }
+
+    //进入房间挖宝的卷轴id
+    //这里还要判断地图和这个id是不是符合的
+    var reel_id = msg.reel_id
+    if (reel_id == 0) {
+        jsb.sendMessage(player, JSONfn.stringify({result:13, desc:"请选择卷轴进入挖宝地"}))
+        return
+    }
+
+    var success = player.setCurGameReel(reel_id)
+    if (!success) {
+        jsb.sendMessage(player, JSONfn.stringify({result:14, desc:"没有找到对应卷轴"}))
         return
     }
 

@@ -102,7 +102,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
         RMapCache<Long, PlayerOnlineStatus> map = redissonClient.getMapCache("online_status");
         //RMap<Long, PlayerOnlineStatus> map = redissonClient.getMap("online_status");
 
-        RLock lock = redissonClient.getLock(strId);
+        RLock lock = redissonClient.getLock("lock_"+strId);
 
         if (lock.tryLock()) {
             try {
